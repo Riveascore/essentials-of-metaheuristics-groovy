@@ -10,29 +10,51 @@ class Tree {
     def randomNodeIndex
     Node desiredNode
     
+    def numberOfNodes, selectedNodeIndex
+    Node selectedNode
+    
     Random random = new Random()
     def nodeValues = ["+", "-", "*", "/", terminalValue]
     
     public Tree(def terminalValue, Integer depthLimit){
         this.terminalValue = terminalValue
         this.depthLimit = depthLimit
-        this.nonTerminalNodes = 0
-        this.randomNodeIndex = 1
+        this.numberOfNodes = 0
+        this.selectedNodeIndex = 1
         this.createTree()
-        this.countNonTerminalNodes(this.root)
+        this.countNodes(this.root)
         //TODO throw exception Exception is: tree contains no non-terminals
     }
     
-    public countNonTerminalNodes(Node node){
-        if(!node.isTerminal()){
-            this.nonTerminalNodes += 1
-            countNonTerminalNodes(node.left)
-            countNonTerminalNodes(node.right)
-        }
-        this.nonTerminalNodes
-    }
+
     
     public pickRandomNode(){
+        Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
+        pickNode(this.root, randomChildNumber)
+    }
+    
+    public pickNode(Node node, Integer desiredIndex){
+        if(node != null){
+            if(desiredIndex == this.selectedNodeIndex){
+                this.selectedNode = node
+            }
+            this.selectedNodeIndex += 1
+            pickNode(node.left, desiredIndex)
+            pickNode(node.right, desiredIndex)
+        }
+    }
+    
+    public countNodes(Node node){
+        if(node != null){
+            this.numberOfNodes += 1
+            countNodes(node.left)
+            countNodes(node.right)
+        }
+        this.numberOfNodes
+    }
+    
+    //TODO delete
+    public pickRandomNodeOld(){
         //TODO possibly make it so we can replace leaves with nonleaves
         Integer randomChildNumber = random.nextInt(this.nonTerminalNodes) + 1
         println "random child number: " + randomChildNumber
@@ -53,11 +75,42 @@ class Tree {
         }
     }
     
+    public countNonTerminalNodes(Node node){
+        if(!node.isTerminal()){
+            this.nonTerminalNodes += 1
+            countNonTerminalNodes(node.left)
+            countNonTerminalNodes(node.right)
+        }
+        this.nonTerminalNodes
+    }
+    //TODO delete
+    
+    public replaceNode(Node originalNode, Node replacementNode){
+        if(originalNode.parent == null){
+            this.root = replacementNode
+        } 
+        else{
+            replacementNode.setParent(originalNode.parent)
+            if(originalNode.directionFromParent == "left"){
+                replacementNode.setDirectionFromParent("left")
+                replacementNode.parent.setLeft(replacementNode)
+            }
+            else{
+                replacementNode.setDirectionFromParent("right")
+                replacementNode.parent.setRight(replacementNode)
+            }
+        }
+    }
+    
+    
+    
+    
     public setFitness(def fitnessValue){
         this.fitness = fitnessValue
     }
     
     public createTree(){
+        //TODO root not be x, but everything else can be x
         this.root = grow(1, this.depthLimit)
     }
     

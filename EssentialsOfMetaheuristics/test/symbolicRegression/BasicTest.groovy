@@ -31,12 +31,34 @@ class BasicTest extends Specification{
         given:
         Tree ourTree = new Tree('x', 6)
         
+//        TreePrinter.printNode(ourTree.root)
+//        println "Non terminal nodes: " + ourTree.nonTerminalNodes
+//        ourTree.pickRandomNode()
+//        println "Random node value: " + ourTree.desiredNode.value
+        
+        expect:
+        true
+    }
+    
+    def "Replace subtree in a generated tree"(){
+        given:
+        Tree ourTree = new Tree('x', 4)
+        Tree replacementBranch = new Tree('x', 4)
+        
+        println "original tree:"
         TreePrinter.printNode(ourTree.root)
-        println "Non terminal nodes: " + ourTree.nonTerminalNodes
-        ourTree.pickRandomNode()
-        println "Random node value: " + ourTree.desiredNode.value
-//        println "random child value: " + ourTree.pickRandomNode().value
-//        println "Tree's evaluation: " + ourTree.evaluateTree(5)
+        println "Non terminal nodes: " + ourTree.numberOfNodes
+        
+        Node newBranch = ourTree.pickRandomNode()
+        println "Random node value: " + ourTree.selectedNode.value
+        
+        println "replacement branch:"
+        TreePrinter.printNode(replacementBranch.root)
+        
+        ourTree.replaceNode(ourTree.selectedNode, replacementBranch.root)
+        println "changed tree:"
+        TreePrinter.printNode(ourTree.root)
+        
         
         expect:
         true

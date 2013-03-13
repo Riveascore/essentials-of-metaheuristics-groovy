@@ -3,6 +3,7 @@ package symbolicRegression
 class Node {
     def value, depth
     Node parent, left, right
+    def directionFromParent
     //TODO discover limit on "depth" of tree
     //TODO ^not sure if should be def?
     
@@ -27,12 +28,18 @@ class Node {
         this.left = left
         left.setParent(this)
         left.depth = this.depth + 1
+        this.left.directionFromParent = "left"
+    }
+    
+    public setDirectionFromParent(String direction){
+        this.directionFromParent = direction
     }
     
     public setRight(Node right){
         this.right = right
         right.setParent(this)
         right.depth = this.depth + 1
+        this.right.directionFromParent = "right"
     }
     
     public isTerminal(){

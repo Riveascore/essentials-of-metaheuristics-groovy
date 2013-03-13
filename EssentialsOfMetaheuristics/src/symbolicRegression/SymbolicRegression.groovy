@@ -7,6 +7,7 @@ class SymbolicRegression {
     def numberOfTimeSteps
     def maxDepthLimit = 20
     def initialPopulationDepth = 5
+    Random random = new Random()
 
     public SymbolicRegression(numberOfTimeSteps){
         //populationOfTrees
@@ -14,15 +15,31 @@ class SymbolicRegression {
         createData()
     }
     
-    public mutation(Node node){
+    public mutation(Tree originalTree){
+        Node node = originalTree.pickRandomNode()
+        
         def maxDepthAddition = maxDepthLimit - node.depth
+        def ourDepth
+        
         if(maxDepthAddition < initialPopulationDepth){
-            //TODO random numb of --> 0-maxDepthAddition
+            ourDepth = random.nextInt(maxDepthAddition)
         }
         else{
-            //TODO rand of --> 0-initialPopulationDepth
+            ourDepth = random.nextInt(initialPopulationDepth)
         }
-           
+        Tree mutatedBranch = new Tree(node, ourDepth)
+        node = mutatedBranch.root
+    }
+    
+    public crossover(Tree injectionGeneTree, Tree replacedGeneTree){
+        Node tree1Node = injectionGeneTree.pickRandomNode()
+        Node tree2Node = replacedGeneTree.pickRandomNode()
+        
+        //TODO only beef is, crossovers only happen onto nonLeaf nodes, fix this?
+        //^because we have less options
+        //TODO make another pickRandomNode() method to allow picking of leaves
+        
+        
     }
     
     public getTreeFitness(Integer treeNumber){
@@ -56,10 +73,6 @@ class SymbolicRegression {
             
             this.treePopulation.put(i, currentTree)
         }
-    }
-    
-    public mutate(TreeOld tree){
-        
     }
     
     public createData(){
