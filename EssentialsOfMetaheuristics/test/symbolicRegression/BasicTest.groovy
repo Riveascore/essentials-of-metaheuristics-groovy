@@ -1,7 +1,7 @@
 package symbolicRegression
 
 import static org.junit.Assert.*
-import spock.lang.Specification
+import spock.lang.*
 
 
 class BasicTest extends Specification{
@@ -39,7 +39,8 @@ class BasicTest extends Specification{
         expect:
         true
     }
-    
+	
+	@Ignore
     def "Replace subtree in a generated tree"(){
         given:
         Tree ourTree = new Tree('x', 4)
@@ -59,20 +60,64 @@ class BasicTest extends Specification{
         println "changed tree:"
         TreePrinter.printNode(ourTree.root)
         
-        
+		Random random = new Random()
+		Double dubz = 1.0
+		println"random numb: " + random.nextDouble()
+		
         expect:
         true
     }
     
     def "Test SymbolicRegression"(){
         given:
-        SymbolicRegression sr = new SymbolicRegression(20)
+        DataSet sr = new DataSet(20)
         sr.createData()
         
+		
         expect:
         true
     }
-   
-    
-    
+	
+	def "Test tree population"(){
+		given:
+		Population treePopulation = new Population('x', 4, 10)
+		treePopulation.createPopulation(treePopulation.populationSize)
+		
+		treePopulation.populationSize.times{
+			TreePrinter.printNode(treePopulation.population.get(it).root)
+		}
+		
+		expect:
+		true
+	}
+	
+	def "Test mating season"(){
+		given:
+		//SRs right here
+		DataSet dataSet = new DataSet(20)
+		dataSet.createData()
+		
+		Population generation1 = new Population('x', 4, 10)
+		generation1.createPopulation(generation1.populationSize)
+		println "Dataset: " + dataSet.data
+		
+		generation1.generateFitness(dataSet.data)
+//		println "fitness of first: " + generation1.population.get(0).fitness
+		
+		
+//		println "OLD TREEEEEEES: "
+//		generation1.populationSize.times{
+//			TreePrinter.printNode(generation1.population.get(it).root)
+//		}
+		
+		Population generation2 = generation1.matingSeason()
+//		println "------------"
+//		println "NEW TREEEES: "
+//		generation2.populationSize.times{
+//			TreePrinter.printNode(generation2.population.get(it).root)
+//		}
+		
+		expect:
+		true
+	}
 }

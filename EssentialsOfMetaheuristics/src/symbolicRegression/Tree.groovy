@@ -1,11 +1,13 @@
 package symbolicRegression
 
+import java.util.TreeMap;
 import java.util.regex.Pattern.First;
 
 class Tree {
     def depthLimit, terminalValue
     Node root
     def fitness
+	def normalizedFitness
     def nonTerminalNodes
     def randomNodeIndex
     Node desiredNode
@@ -23,7 +25,6 @@ class Tree {
         this.selectedNodeIndex = 1
         this.createTree()
         this.countNodes(this.root)
-        //TODO throw exception Exception is: tree contains no non-terminals
     }
     
 
@@ -53,38 +54,6 @@ class Tree {
         this.numberOfNodes
     }
     
-    //TODO delete
-    public pickRandomNodeOld(){
-        //TODO possibly make it so we can replace leaves with nonleaves
-        Integer randomChildNumber = random.nextInt(this.nonTerminalNodes) + 1
-        println "random child number: " + randomChildNumber
-        if(this.nonTerminalNodes == 0){
-            //TODO throw exception Exception is: tree contains no non-terminals
-        }
-        pickNonTerminalChild(this.root, randomChildNumber)
-    }
-    
-    public pickNonTerminalChild(Node node, Integer desiredIndex){
-        if(!node.isTerminal()){
-            if(desiredIndex == this.randomNodeIndex){
-                this.desiredNode = node
-            }
-            this.randomNodeIndex += 1
-            pickNonTerminalChild(node.left, desiredIndex)
-            pickNonTerminalChild(node.right, desiredIndex)
-        }
-    }
-    
-    public countNonTerminalNodes(Node node){
-        if(!node.isTerminal()){
-            this.nonTerminalNodes += 1
-            countNonTerminalNodes(node.left)
-            countNonTerminalNodes(node.right)
-        }
-        this.nonTerminalNodes
-    }
-    //TODO delete
-    
     public replaceNode(Node originalNode, Node replacementNode){
         if(originalNode.parent == null){
             this.root = replacementNode
@@ -101,13 +70,34 @@ class Tree {
             }
         }
     }
-    
-    
-    
-    
-    public setFitness(def fitnessValue){
-        this.fitness = fitnessValue
-    }
+	
+	public setTreeFitness(Map<Double, Double> dataSet){
+		
+		def totalError = 0
+		
+		for(Map.Entry<Double, Double> entry : dataSet.entrySet()){
+			totalError += this.singlePointError(entry.getKey(), entry.getValue())
+		}
+		this.fitness = 1.0/Math.sqrt(totalError)
+	}
+	
+	//Dataset is <xValue, functionOutput>
+	public singlePointError(Double xValue, Double functionOutput){
+		def treeFunctionValue = this.evaluateTree(xValue)
+		Math.pow(treeFunctionValue - functionOutput, 2.0)
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public setNormalizedFitness(def normalizedFitnessValue){
+		this.normalizedFitness = normalizedFitnessValue
+	}
     
     public createTree(){
         //TODO root not be x, but everything else can be x
@@ -154,13 +144,5 @@ class Tree {
     
     public evaluateTree(def input){
         this.root.computeNodeValue(input)
-    }
-    
-    public mutation(){
-        
-    }
-    
-    public crossover(){
-        
     }
 }
