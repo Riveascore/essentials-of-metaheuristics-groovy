@@ -6,6 +6,7 @@ import spock.lang.*
 
 class BasicTest extends Specification{
     
+	@Ignore
     def "Test Terminal"() {
         given:
         Node root = new Node('+')
@@ -17,6 +18,7 @@ class BasicTest extends Specification{
         root.isTerminal()==false
     }
     
+	@Ignore
     def "Test if nodes (of all the same values) are EQUAL"(){
         given:
         Node node1 = new Node('+')
@@ -27,6 +29,7 @@ class BasicTest extends Specification{
         node1 != node2
     }
     
+	@Ignore
     def "Test Tree"(){
         given:
         Tree ourTree = new Tree('x', 6)
@@ -68,6 +71,7 @@ class BasicTest extends Specification{
         true
     }
     
+	@Ignore
     def "Test SymbolicRegression"(){
         given:
         DataSet sr = new DataSet(20)
@@ -78,6 +82,7 @@ class BasicTest extends Specification{
         true
     }
 	
+	@Ignore
 	def "Test tree population"(){
 		given:
 		Population treePopulation = new Population('x', 4, 10)

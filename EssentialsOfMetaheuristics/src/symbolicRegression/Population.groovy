@@ -28,7 +28,6 @@ class Population {
 		populationSize.times{
 			this.totalFitness += population.get(it).fitness
 		} 
-		this.totalFitness = 1.0/this.totalFitness 
 		
 		Tree currentTree
 		def newFitness
@@ -66,6 +65,10 @@ class Population {
 		Tree bestParticipator = this.selectTree()
 		Tree temporaryParticipator
 		(tournamentSize-1).times{
+			temporaryParticipator = this.selectTree()
+//			println "best nFittness" + bestParticipator.normalizedFitness
+//			println "temporary nFittness" + temporaryParticipator.normalizedFitness
+			
 			if(temporaryParticipator.normalizedFitness > bestParticipator.normalizedFitness){
 				bestParticipator = temporaryParticipator
 			}
@@ -77,16 +80,16 @@ class Population {
 		Double decision = random.nextDouble(); 
 		Double sum = 0
 		Double hold = 0
+		println "pop fitnesses"
 		populationSize.times{
 			hold = this.population.get(it).normalizedFitness
-			println "hold value:" hold
 			sum += hold
 			if(decision <= sum){
-				return population.get(i)
+//				return population.get(it)
 			}
 		}
+		println "total" + sum
 	}
-	
 	public mutation(Tree originalTree){
 		Node node = originalTree.pickRandomNode()
 		
