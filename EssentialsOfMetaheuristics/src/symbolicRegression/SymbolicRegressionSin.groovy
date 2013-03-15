@@ -22,7 +22,7 @@ class SymbolicRegressionSin {
 		Boolean fitnessTermination = mostFitIndividual.fitness >= 1
 		Boolean generationTermination = currentGenerationNumber < 50
 
-		while(fitnessTermination || generationTermination){
+		while(fitnessTermination && generationTermination){
 			currentPopulation = currentPopulation.matingSeason()
 			currentPopulation.generateFitness(dataSet.data)
 			currentGenerationNumber++
@@ -30,7 +30,7 @@ class SymbolicRegressionSin {
 			mostFitIndividual = currentPopulation.getMostFitIndividual()
 			println "Generation " + currentGenerationNumber + " has ran."
 			fitnessTermination = mostFitIndividual.fitness >= 1
-			generationTermination = currentGenerationNumber > 50
+			generationTermination = currentGenerationNumber < 50
 		}
 		println "Generation" + currentGenerationNumber + " Most fit individual:"
 		
