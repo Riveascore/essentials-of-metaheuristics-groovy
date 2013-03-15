@@ -20,7 +20,7 @@ class SymbolicRegressionSin {
 		Tree mostFitIndividual = currentPopulation.getMostFitIndividual()
 		
 		Boolean fitnessTermination = mostFitIndividual.fitness >= 1
-		Boolean generationTermination = currentGenerationNumber > 50
+		Boolean generationTermination = currentGenerationNumber < 50
 
 		while(fitnessTermination || generationTermination){
 			currentPopulation = currentPopulation.matingSeason()
