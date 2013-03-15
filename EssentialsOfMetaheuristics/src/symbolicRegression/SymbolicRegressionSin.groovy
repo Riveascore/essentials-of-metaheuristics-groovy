@@ -13,7 +13,7 @@ class SymbolicRegressionSin {
 		
 		Random random = new Random()
 		
-		Integer maxGenerations = 50
+		Integer maxGenerations = 100
 		Double fitnessThreshold = 1.0
 		Integer initialDepthLimit = 5 
 		//random.nextInt(5)+2

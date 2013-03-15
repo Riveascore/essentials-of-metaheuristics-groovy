@@ -78,10 +78,10 @@ class Tree {
 		countNodesWithLimit(this.root, injectionHeight, maxEvolvedHeightLimit)
 		
 		if(this.numberOfNodes == null || this.numberOfNodes <= 0){
-			println "number of nodes done goofed: " + this.numberOfNodes
-			
-			println "injectionHeight: " + injectionHeight
-			println "maxEvolvedHeightLimit: " + maxEvolvedHeightLimit
+			println "this.root is it null? " + this.root
+			println "number of nodes done goofed: " + this.numberOfNodes //ie 0
+			println "injectionHeight: " + injectionHeight //ie 6
+			println "maxEvolvedHeightLimit: " + maxEvolvedHeightLimit //ie 12
 		}
 		Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
 		pickNodeWithLimit(this.root, randomChildNumber, injectionHeight, maxEvolvedHeightLimit)
