@@ -11,7 +11,8 @@ class Tree {
     def nonTerminalNodes
     def randomNodeIndex
     Node desiredNode
-    
+	def maxAdditionHeight
+	
     def numberOfNodes, selectedNodeIndex
     Node selectedNode
     
@@ -24,35 +25,86 @@ class Tree {
         this.numberOfNodes = 0
         this.selectedNodeIndex = 1
         this.createTree()
-        this.countNodes(this.root)
+		this.maxAdditionHeight = maxAdditionHeight
     }
-    
-
-    
+	
     public pickRandomNode(){
+		this.selectedNodeIndex = 0
+		this.numberOfNodes = 0
+		//Reset these^ to 0 so they don't get passed onto the next generation
+		this.countNodes(this.root)
         Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
         pickNode(this.root, randomChildNumber)
+		this.selectedNode
     }
+	
+	public cloneTree(){
+		Tree clonedTree = new Tree(this.terminalValue, this.depthLimit)
+		clonedTree.root = this.root.cloneNode()
+	}
+	
+	public pickNode(Node node, Integer desiredIndex){
+		if(node != null){
+			this.selectedNodeIndex += 1
+			if(desiredIndex == this.selectedNodeIndex){
+				this.selectedNode = node
+			}
+			pickNode(node.left, desiredIndex)
+			pickNode(node.right, desiredIndex)
+		}
+	}
+	
+	public countNodes(Node node){
+		if(node != null){
+			this.numberOfNodes += 1
+			countNodes(node.left)
+			countNodes(node.right)
+		}
+		this.numberOfNodes
+	}
+	
+	
+	
+	
+	
+	public pickRandomNodeWithLimit(Integer maxAdditionHeight){
+		this.selectedNodeIndex = 0
+		this.numberOfNodes = 0
+		//Reset these^ to 0 so they don't get passed onto the next generation
+		this.countNodesWithLimit(this.root, maxAdditionHeight)
+		
+		Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
+		pickNodeWithLimit(this.root, randomChildNumber, maxAdditionHeight)
+		this.selectedNode
+	}
     
-    public pickNode(Node node, Integer desiredIndex){
+    public pickNodeWithLimit(Node node, Integer desiredIndex, Integer maxAdditionHeight){
         if(node != null){
-            if(desiredIndex == this.selectedNodeIndex){
-                this.selectedNode = node
-            }
-            this.selectedNodeIndex += 1
-            pickNode(node.left, desiredIndex)
-            pickNode(node.right, desiredIndex)
+			if(node.getNodeHeight() <= maxAdditionHeight){
+	            if(desiredIndex == this.selectedNodeIndex){
+					//if height is ok
+	                this.selectedNode = node
+	            }
+				//if reached height cap we skip last if
+				this.selectedNodeIndex += 1
+			}
+            
+            pickNodeWithLimit(node.left, desiredIndex, maxAdditionHeight)
+            pickNodeWithLimit(node.right, desiredIndex, maxAdditionHeight)
         }
     }
-    
-    public countNodes(Node node){
-        if(node != null){
-            this.numberOfNodes += 1
-            countNodes(node.left)
-            countNodes(node.right)
-        }
-        this.numberOfNodes
-    }
+	
+	public countNodesWithLimit(Node node, Integer maxAdditionHeight){
+		if(node != null){
+			if(node.getNodeHeight() <= maxAdditionHeight){
+				this.numberOfNodes += 1
+			}
+			//if node height is too big, we skip over that node and go to the children
+			countNodesWithLimit(node.left, maxAdditionHeight)
+			countNodesWithLimit(node.right, maxAdditionHeight)
+		}
+		this.numberOfNodes
+	}
     
     public replaceNode(Node originalNode, Node replacementNode){
         if(originalNode.parent == null){
@@ -126,6 +178,8 @@ class Tree {
         
         
     }
+	
+
     
     public grow(depth, maxDepth){
         Node node

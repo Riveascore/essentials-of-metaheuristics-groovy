@@ -4,6 +4,7 @@ class Node {
     def value, depth
     Node parent, left, right
     def directionFromParent
+	
     //TODO discover limit on "depth" of tree
     //TODO ^not sure if should be def?
     
@@ -15,6 +16,58 @@ class Node {
             this.depth = 0
         }
     }
+	
+	public Node(){
+	}
+	
+//	public copyChildren(Node node){
+//		node = this.cloneNode()
+//		println "original node " + this
+//		println "cloned node " + node
+//		
+//		if(this.left != null){
+//			node.left = new Node()
+//			this.left.copyChildren(node.left)
+//		}
+//		if(this.right != null){
+//			node.right = new Node()
+//			this.right.copyChildren(node.right)
+//		}
+//	}
+	
+
+	
+	public cloneNode(){
+		Node node = new Node(this.value)
+		node.setDepth(this.depth)
+		node
+		
+		if(this.left != null){
+			node.setLeft(this.left.cloneNode())
+		}
+		if(this.right != null){
+			node.setRight(this.right.cloneNode())
+		}
+		return node
+	}
+	
+	
+	public getNodeHeight(){
+		Integer height = 1
+		Integer leftHeight =0
+		Integer rightHeight =0
+		Integer maxHeight = 0
+		
+		if(this.left != null){
+			leftHeight = this.left.getNodeHeight()
+		}
+		else if(this.right != null){
+			rightHeight = this.right.getNodeHeight()
+		}
+			maxHeight=Math.max(leftHeight, rightHeight)
+			return height + maxHeight		
+	}
+	
     
     public setValue(def value){
         this.value = value

@@ -6,6 +6,8 @@ import spock.lang.*
 
 class BasicTest extends Specification{
     
+	Random random = new Random()
+	
 	@Ignore
     def "Test Terminal"() {
         given:
@@ -96,19 +98,17 @@ class BasicTest extends Specification{
 		true
 	}
 	
+	@Ignore
 	def "Test mating season"(){
 		given:
 		//SRs right here
 		DataSet dataSet = new DataSet(20)
 		dataSet.createData()
 		
-		Population generation1 = new Population('x', 4, 10)
+		Population generation1 = new Population('x', 3, 10, 6)
 		generation1.createPopulation(generation1.populationSize)
-		println "Dataset: " + dataSet.data
 		
 		generation1.generateFitness(dataSet.data)
-//		println "fitness of first: " + generation1.population.get(0).fitness
-		
 		
 //		println "OLD TREEEEEEES: "
 //		generation1.populationSize.times{
@@ -116,11 +116,53 @@ class BasicTest extends Specification{
 //		}
 		
 		Population generation2 = generation1.matingSeason()
+		
 //		println "------------"
 //		println "NEW TREEEES: "
 //		generation2.populationSize.times{
 //			TreePrinter.printNode(generation2.population.get(it).root)
 //		}
+		
+		expect:
+		true
+	}
+	
+	def "test clone node"(){
+		given:
+		Node first = new Node('x')
+		Node clone = first.cloneNode()
+		
+		first.setValue('y')
+		
+		expect:
+		first.value == 'y'
+		clone.value == 'x'
+	}
+	
+	@Ignore
+	def "Test if changing a tree changes is globally"(){
+		given:
+		
+		Tree tree = new Tree('x', 5)
+		tree.createTree()
+		
+		Node changedNode = new Node('Changed Node')
+		
+		println "Original Tree before"
+		TreePrinter.printNode(tree.root)
+		
+		Tree clonedTree = new Tree(tree.terminalValue, tree.depthLimit)
+		clonedTree.root = tree.root.cloneNode()
+		
+		
+		//replace a node
+		tree.replaceNode(tree.pickRandomNode(), changedNode)
+		
+		println "Original Tree after"
+		TreePrinter.printNode(tree.root)
+		
+		println "copied tree"
+		TreePrinter.printNode(clonedTree.root)
 		
 		expect:
 		true
