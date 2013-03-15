@@ -12,6 +12,7 @@ class Tree {
     def randomNodeIndex
     Node desiredNode
 	def maxAdditionHeight
+	def maxEvolvedDepthLimit
 	
     def numberOfNodes, selectedNodeIndex
     Node selectedNode
@@ -25,23 +26,28 @@ class Tree {
         this.numberOfNodes = 0
         this.selectedNodeIndex = 1
         this.createTree()
-		this.maxAdditionHeight = maxAdditionHeight
     }
+	
+	public printTree(){
+		TreePrinter.printNode(this.root)
+	}
+	
+	public cloneTree(){
+		Tree clonedTree = new Tree(this.terminalValue, this.depthLimit)
+		clonedTree.root = this.root.cloneNode()
+		clonedTree
+	}
 	
     public pickRandomNode(){
 		this.selectedNodeIndex = 0
 		this.numberOfNodes = 0
+		this.selectedNode = null
 		//Reset these^ to 0 so they don't get passed onto the next generation
 		this.countNodes(this.root)
         Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
         pickNode(this.root, randomChildNumber)
 		this.selectedNode
     }
-	
-	public cloneTree(){
-		Tree clonedTree = new Tree(this.terminalValue, this.depthLimit)
-		clonedTree.root = this.root.cloneNode()
-	}
 	
 	public pickNode(Node node, Integer desiredIndex){
 		if(node != null){
@@ -61,32 +67,33 @@ class Tree {
 			countNodes(node.right)
 		}
 		this.numberOfNodes
+		//TODO ^I don't think we need this
 	}
-	
-	
-	
-	
 	
 	public pickRandomNodeWithLimit(Integer maxAdditionHeight){
 		this.selectedNodeIndex = 0
 		this.numberOfNodes = 0
+		this.selectedNode = null
 		//Reset these^ to 0 so they don't get passed onto the next generation
 		this.countNodesWithLimit(this.root, maxAdditionHeight)
+		
 		
 		Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
 		pickNodeWithLimit(this.root, randomChildNumber, maxAdditionHeight)
 		this.selectedNode
 	}
     
+	//TODO THIS IS WHERE THE PROBLEM IS!
     public pickNodeWithLimit(Node node, Integer desiredIndex, Integer maxAdditionHeight){
         if(node != null){
 			if(node.getNodeHeight() <= maxAdditionHeight){
+				this.selectedNodeIndex += 1
 	            if(desiredIndex == this.selectedNodeIndex){
+					//IN OTHER FUNCTION IT'S desiredIndex == this.selectedNodeIndex
 					//if height is ok
 	                this.selectedNode = node
 	            }
 				//if reached height cap we skip last if
-				this.selectedNodeIndex += 1
 			}
             
             pickNodeWithLimit(node.left, desiredIndex, maxAdditionHeight)
@@ -104,6 +111,7 @@ class Tree {
 			countNodesWithLimit(node.right, maxAdditionHeight)
 		}
 		this.numberOfNodes
+		//TODO ^I don't think we need this
 	}
     
     public replaceNode(Node originalNode, Node replacementNode){
@@ -139,14 +147,6 @@ class Tree {
 		Math.pow(treeFunctionValue - functionOutput, 2.0)
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
 	public setNormalizedFitness(def normalizedFitnessValue){
 		this.normalizedFitness = normalizedFitnessValue
 	}
@@ -175,8 +175,6 @@ class Tree {
         }
 
         //^picks the second index value until it's different than the first
-        
-        
     }
 	
 

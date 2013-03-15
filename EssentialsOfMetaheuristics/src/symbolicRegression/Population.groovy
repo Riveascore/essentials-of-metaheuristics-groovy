@@ -10,17 +10,23 @@ class Population {
 	def initialGenerationDepth
 	Random random = new Random()
 
-	public Population(def terminalValue, def depthLimit, def populationSize, def maxEvolvedDepthLimit){
+	//TODO Fix it so we don't need to pass populationSize to "create population"
+	//TODO LOTS OF REDUNDANCIES TO FIX!!!!
+	public Population(def terminalValue, def depthLimit, Integer populationSize, def maxEvolvedDepthLimit){
 		this.terminalValue = terminalValue
 		this.currentDepthLimit = depthLimit
-		this.populationSize = populationSize
 		this.maxEvolvedDepthLimit = maxEvolvedDepthLimit
+		this.populationSize = populationSize
 	}
 
-	public createPopulation(Integer populationSize){
-		Tree addedTree = new Tree(this.terminalValue, this.currentDepthLimit)
-		addedTree.createTree()
+	public createPopulation(){
+		Tree addedTree
+		
 		populationSize.times{
+			addedTree = new Tree(this.terminalValue, this.currentDepthLimit)
+			addedTree.maxEvolvedDepthLimit = this.maxEvolvedDepthLimit
+			addedTree.createTree()
+			
 			this.population.add(addedTree)
 		}
 	}
@@ -59,17 +65,18 @@ class Population {
 	}
 
 	public tournamentSelection(Integer tournamentSize){
-		List<Tree> tournamentParticipators = new ArrayList<Tree>()
 		Tree bestParticipator = this.selectTree()
 
 		Tree temporaryParticipator
 		(tournamentSize-1).times{
 			temporaryParticipator = this.selectTree()
+			
 
 			if(temporaryParticipator.normalizedFitness > bestParticipator.normalizedFitness){
 				bestParticipator = temporaryParticipator
 			}
 		}
+		
 		bestParticipator
 	}
 
@@ -89,13 +96,14 @@ class Population {
 		}
 		this.population = orderedByNormalizedFitness
 	}
+	//TODO put MUTATE/CROSSOVER and possibly other stuff into a "GeneticOperators"(better name?) class
 
 	public selectTree(){
 		Double chosenTreeIndex = random.nextDouble();
 		Double sum = 0
 		Double hold = 0
 
-		for(int i = 0; i < populationSize; i++){
+		for(int i = 0; i < this.populationSize; i++){
 			hold = this.population.get(i).normalizedFitness
 			sum += hold
 			if(chosenTreeIndex <= sum){
@@ -104,57 +112,50 @@ class Population {
 		}
 	}
 	
-	public mutation(Tree originalTree){
-		Integer additionHeightLimit = this.maxEvolvedDepthLimit - originalTree.root.getNodeHeight()
-		println "node height" + originalTree.root.getNodeHeight()
-		//TODO CALCULATE THIS^ AFTER RANDOMLY PICKED NODE
-		
-		Node oldNode = originalTree.pickRandomNode()
-		Tree newTree = new Tree(originalTree.terminalValue, additionHeightLimit)
-		Node mutatedBranchNode = newTree.root
-		
-//		println "old tree"
-//		TreePrinter.printNode(originalTree.root)
-//		
-//		println "mutated branch"
-//		TreePrinter.printNode(mutatedBranchNode)
-		
-		//TODO AT SOME POINT change depthLimit in Tree to height if we have time
-		originalTree.replaceNode(oldNode, mutatedBranchNode)
-		
-//		println "changed tree"
-//		TreePrinter.printNode(originalTree.root)
-	}
-	
 	public reproduce(){
 		Integer randomNumber = random.nextInt(100)
-//		if(randomNumber == 0){
-//			this.mutation(this.selectTree())
-//		}
-//		else if(randomNumber > 0 && randomNumber < 10){
-//			this.selectTree()
-//		}
-//		else{
-//			crossover(tournamentSelection(this.populationSize), tournamentSelection(this.populationSize))
-//			//TODO gotta finish crossover first?
-//		}
-		this.mutation(this.selectTree())
+		if(randomNumber == 0){
+			this.mutate(this.selectTree())
+		}
+		else if(randomNumber > 0 && randomNumber < 10){
+			this.selectTree()
+		}
+		else{
+			this.crossover()
+		}
 	}
 
-	public crossover(Tree injectionGeneTree, Tree replacedGeneTree){
+	public crossover(){
+		Tree tree1 = this.tournamentSelection(this.populationSize)
+		Tree tree2 = this.tournamentSelection(this.populationSize)
+		
+		Tree injectionGeneTree = tree1.cloneTree()
+		Tree replacedGeneTree = tree2.cloneTree()
 		
 		Node replacedNode = replacedGeneTree.pickRandomNode()
+		//Not constrained, can pick any node here!
+		//But now, the injection node decision will be constrained!
+		
 		def maxAdditionHeight = this.maxEvolvedDepthLimit - replacedNode.getNodeHeight()
+		
 		Node injectionNode = injectionGeneTree.pickRandomNodeWithLimit(maxAdditionHeight)
-
+		
 		replacedGeneTree.replaceNode(replacedNode, injectionNode)
+		//TODO allowed to crossover with same tree? IE tree1 crossover into tree1
 		replacedGeneTree
-		//TODO can we crossover with same tree? IE tree1 crossover into tree1
+	}
+	
+	public mutate(Tree originalTree){
+		Integer additionHeightLimit = this.maxEvolvedDepthLimit - originalTree.root.getNodeHeight()
+		//TODO CALCULATE THIS^ AFTER RANDOMLY PICKED NODE
+		
+		Tree newTree = originalTree.cloneTree()
+		Node replaceThisNode = newTree.pickRandomNode()
+		
+		Tree injectionTree = new Tree(newTree.terminalValue, additionHeightLimit)
+		
+		//TODO AT SOME POINT change depthLimit in Tree to height if we have time
+		newTree.replaceNode(replaceThisNode, injectionTree.root)
+		newTree
 	}
 }
-
-
-
-
-
-

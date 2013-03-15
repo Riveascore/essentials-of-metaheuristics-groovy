@@ -98,33 +98,32 @@ class BasicTest extends Specification{
 		true
 	}
 	
-	@Ignore
-	def "Test mating season"(){
+	def "matingSeason Test"(){
 		given:
-		//SRs right here
-		DataSet dataSet = new DataSet(20)
-		dataSet.createData()
 		
 		Population generation1 = new Population('x', 3, 10, 6)
-		generation1.createPopulation(generation1.populationSize)
+		generation1.createPopulation()
 		
+		DataSet dataSet = new DataSet(20)
+		dataSet.createData()
 		generation1.generateFitness(dataSet.data)
-		
-//		println "OLD TREEEEEEES: "
-//		generation1.populationSize.times{
-//			TreePrinter.printNode(generation1.population.get(it).root)
-//		}
 		
 		Population generation2 = generation1.matingSeason()
 		
+//		println "OLD TREEEEEEES: "
+//		generation1.populationSize.times{
+//			generation1.population.get(it).printTree()
+//		}
+//		
+//		
 //		println "------------"
 //		println "NEW TREEEES: "
 //		generation2.populationSize.times{
-//			TreePrinter.printNode(generation2.population.get(it).root)
+//			generation2.population.get(it).printTree()
 //		}
 		
 		expect:
-		true
+		generation2.populationSize == generation1.populationSize
 	}
 	
 	def "test clone node"(){
@@ -143,7 +142,7 @@ class BasicTest extends Specification{
 	def "Test if changing a tree changes is globally"(){
 		given:
 		
-		Tree tree = new Tree('x', 5)
+		Tree tree = new Tree('x', 3)
 		tree.createTree()
 		
 		Node changedNode = new Node('Changed Node')
@@ -154,7 +153,6 @@ class BasicTest extends Specification{
 		Tree clonedTree = new Tree(tree.terminalValue, tree.depthLimit)
 		clonedTree.root = tree.root.cloneNode()
 		
-		
 		//replace a node
 		tree.replaceNode(tree.pickRandomNode(), changedNode)
 		
@@ -163,6 +161,86 @@ class BasicTest extends Specification{
 		
 		println "copied tree"
 		TreePrinter.printNode(clonedTree.root)
+		
+		expect:
+		true
+	}
+	
+	@Ignore
+	def "Test mutation on a tree"(){
+		given:
+		
+		Population generation0 = new Population('x', 3, 10, 5)
+		generation0.createPopulation(generation0.populationSize)
+		
+		println "Original Tree before"
+		generation0.population.get(0).printTree()
+		
+		Tree mutatedTree = generation0.mutate(generation0.population.get(0))
+		
+		println "Original Tree after"
+		generation0.population.get(0).printTree()
+		
+		println "Final mutated tree!!!!!!!"
+		mutatedTree.printTree()
+		
+		expect:
+		true
+	}
+	
+	@Ignore
+	def "Crossover Test"(){
+		given:
+		Population population = new Population('x', 3, 10, 5)
+		population.createPopulation()
+		
+		DataSet dataSet = new DataSet(20)
+		dataSet.createData()
+		population.generateFitness(dataSet.data)
+
+		Tree crossedOverTree = population.crossover()
+		
+		println "originalTree: "
+		crossedOverTree.printTree()
+		
+		println "crossedOverTree: "
+		crossedOverTree.printTree()
+		
+		expect:
+		true
+	}
+	
+	@Ignore
+	def "Tournament Selection Test"(){
+		given:
+		Population population = new Population('x', 3, 10, 5)
+		population.createPopulation()
+		
+		DataSet dataSet = new DataSet(20)
+		dataSet.createData()
+		population.generateFitness(dataSet.data)
+		
+		Tree tournamentWinner = population.tournamentSelection(population.populationSize)
+		
+		println "tournamentWinner: "
+		tournamentWinner.printTree()
+		
+		expect:
+		true
+	}
+	
+	@Ignore
+	def "Test make population"(){
+		given:
+		Population population = new Population('x', 3, 10, 5)
+		DataSet dataSet = new DataSet(20)
+		dataSet.createData()
+		population.createPopulation()
+		
+		println "Original Trees"
+		population.populationSize.times{
+			population.population.get(it).printTree()
+		}
 		
 		expect:
 		true
