@@ -71,12 +71,18 @@ class Tree {
 	}
 	
 	public pickRandomNodeWithLimit(Integer injectionHeight, Integer maxEvolvedHeightLimit){
-		this.selectedNodeIndex = 0
-		this.numberOfNodes = 0
-		this.selectedNode = null
+		selectedNodeIndex = 0
+		numberOfNodes = 0
+		selectedNode = null
 		//Reset these^ to 0 so they don't get passed onto the next generation
-		this.countNodesWithLimit(this.root, injectionHeight, maxEvolvedHeightLimit)
+		countNodesWithLimit(this.root, injectionHeight, maxEvolvedHeightLimit)
 		
+		if(this.numberOfNodes == null || this.numberOfNodes <= 0){
+			println "number of nodes done goofed: " + this.numberOfNodes
+			
+			println "injectionHeight: " + injectionHeight
+			println "maxEvolvedHeightLimit: " + maxEvolvedHeightLimit
+		}
 		Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
 		pickNodeWithLimit(this.root, randomChildNumber, injectionHeight, maxEvolvedHeightLimit)
 		this.selectedNode
@@ -89,9 +95,7 @@ class Tree {
 	            if(desiredIndex == this.selectedNodeIndex){
 	                this.selectedNode = node
 	            }
-				//if reached height cap we skip last if
 			}
-            
             pickNodeWithLimit(node.left, desiredIndex, injectionHeight, maxEvolvedHeightLimit)
             pickNodeWithLimit(node.right, desiredIndex, injectionHeight, maxEvolvedHeightLimit)
         }
@@ -107,9 +111,16 @@ class Tree {
 			countNodesWithLimit(node.left, injectionHeight, maxEvolvedHeightLimit)
 			countNodesWithLimit(node.right, injectionHeight, maxEvolvedHeightLimit)
 		}
+//		else{
+//			//HAS TO PRINT ALL THIS FOR DEBUGGING
+//			println "node.depth: " + node
+//			println "injectionHeight: " + injectionHeight
+//			println "maxEvolvedHeightLimit: " + maxEvolvedHeightLimit
+//		}
 		this.numberOfNodes
 		//TODO ^I don't think we need this
 	}
+	
     
     public replaceNode(Node originalNode, Node replacementNode){
         if(originalNode.parent == null){
