@@ -6,40 +6,55 @@ class Population {
 	def terminalValue
 	def currentDepthLimit
 	def populationSize
-	def maxEvolvedDepthLimit
+	def maxEvolvedHeightLimit
 	def initialGenerationDepth
+	Tree mostFitIndividual
 	Random random = new Random()
 
 	//TODO Fix it so we don't need to pass populationSize to "create population"
 	//TODO LOTS OF REDUNDANCIES TO FIX!!!!
-	public Population(def terminalValue, def depthLimit, Integer populationSize, def maxEvolvedDepthLimit){
+	public Population(def terminalValue, def depthLimit, Integer populationSize, def maxEvolvedHeightLimit){
 		this.terminalValue = terminalValue
 		this.currentDepthLimit = depthLimit
-		this.maxEvolvedDepthLimit = maxEvolvedDepthLimit
+		this.maxEvolvedHeightLimit = maxEvolvedHeightLimit
 		this.populationSize = populationSize
 	}
-
+	
 	public createPopulation(){
 		Tree addedTree
 		
 		populationSize.times{
 			addedTree = new Tree(this.terminalValue, this.currentDepthLimit)
-			addedTree.maxEvolvedDepthLimit = this.maxEvolvedDepthLimit
+			
 			addedTree.createTree()
+//			addedTree.maxEvolvedHeightLimit = this.maxEvolvedHeightLimit
 			
 			this.population.add(addedTree)
 		}
 	}
 	
-
+	public getMostFitIndividual(){
+		population.get(0)
+	}
+	
 
 	public generateFitness(Map<Double, Double> dataSet){
-		populationSize.times{
-			population.get(it).setTreeFitness(dataSet)
+		
+		Tree firstTree = population.get(0)
+		firstTree.setTreeFitness(dataSet)
+		
+		Integer bestFitnessIndex = 0
+		this.totalFitness += 1.0/firstTree.fitness
+		
+		(populationSize-1).times{
+			population.get(it+1).setTreeFitness(dataSet)
+			if(population.get(it+1).fitness > population.get(bestFitnessIndex).fitness){
+				bestFitnessIndex = it+1
+			}
+			this.totalFitness += 1.0/population.get(it+1).fitness
 		}
-		populationSize.times{
-			this.totalFitness += population.get(it).fitness
-		}
+		this.mostFitIndividual = population.get(bestFitnessIndex)
+		
 
 		Tree currentTree
 		def newFitness
@@ -54,7 +69,7 @@ class Population {
 	//TODO Give mutation/crossover a heightLimit value
 
 	public matingSeason(){
-		Population newPopulation = new Population(this.terminalValue, this.currentDepthLimit, this.populationSize, this.maxEvolvedDepthLimit)
+		Population newPopulation = new Population(this.terminalValue, this.currentDepthLimit, this.populationSize, this.maxEvolvedHeightLimit)
 
 		Tree newTree
 		populationSize.times{
@@ -136,9 +151,9 @@ class Population {
 		//Not constrained, can pick any node here!
 		//But now, the injection node decision will be constrained!
 		
-		def maxAdditionHeight = this.maxEvolvedDepthLimit - replacedNode.getNodeHeight()
+		def injectionHeight = replacedNode.getNodeHeight()
 		
-		Node injectionNode = injectionGeneTree.pickRandomNodeWithLimit(maxAdditionHeight)
+		Node injectionNode = injectionGeneTree.pickRandomNodeWithLimit(injectionHeight, this.maxEvolvedHeightLimit)
 		
 		replacedGeneTree.replaceNode(replacedNode, injectionNode)
 		//TODO allowed to crossover with same tree? IE tree1 crossover into tree1
@@ -146,7 +161,7 @@ class Population {
 	}
 	
 	public mutate(Tree originalTree){
-		Integer additionHeightLimit = this.maxEvolvedDepthLimit - originalTree.root.getNodeHeight()
+		Integer additionHeightLimit = this.maxEvolvedHeightLimit - originalTree.root.getNodeHeight()
 		//TODO CALCULATE THIS^ AFTER RANDOMLY PICKED NODE
 		
 		Tree newTree = originalTree.cloneTree()

@@ -4,7 +4,6 @@ class DataSet {
     
     TreeMap<Double, Double> data = new TreeMap<Double, Double>()
     def numberOfTimeSteps
-    def maxDepthLimit = 20
     def initialPopulationDepth = 5
     Random random = new Random()
 
@@ -16,7 +15,7 @@ class DataSet {
     
     public createData(){
         
-        Double lowerRange = 0, topRange = Math.PI
+        Double lowerRange = 0, topRange = 2.0*Math.PI
         
         Double timeStepSize = topRange/this.numberOfTimeSteps
         

@@ -35,7 +35,14 @@ class Node {
 //		}
 //	}
 	
-
+	public stringForm(){
+		if(this.nonTerminals.contains(this.value)){
+			return "(" + this.left.stringForm() + this.value + this.right.stringForm() + ")"
+		}
+		else {
+			this.value
+		}
+	}
 	
 	public cloneNode(){
 		Node node = new Node(this.value)

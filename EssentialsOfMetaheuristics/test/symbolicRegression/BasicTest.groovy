@@ -3,7 +3,6 @@ package symbolicRegression
 import static org.junit.Assert.*
 import spock.lang.*
 
-
 class BasicTest extends Specification{
     
 	Random random = new Random()

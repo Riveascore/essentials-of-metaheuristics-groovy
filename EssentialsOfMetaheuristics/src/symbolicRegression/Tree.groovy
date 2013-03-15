@@ -6,13 +6,13 @@ import java.util.regex.Pattern.First;
 class Tree {
     def depthLimit, terminalValue
     Node root
-    def fitness
-	def normalizedFitness
+    Double fitness
+	Double normalizedFitness
     def nonTerminalNodes
     def randomNodeIndex
     Node desiredNode
 	def maxAdditionHeight
-	def maxEvolvedDepthLimit
+	def maxEvolvedHeightLimit
 	
     def numberOfNodes, selectedNodeIndex
     Node selectedNode
@@ -70,45 +70,42 @@ class Tree {
 		//TODO ^I don't think we need this
 	}
 	
-	public pickRandomNodeWithLimit(Integer maxAdditionHeight){
+	public pickRandomNodeWithLimit(Integer injectionHeight, Integer maxEvolvedHeightLimit){
 		this.selectedNodeIndex = 0
 		this.numberOfNodes = 0
 		this.selectedNode = null
 		//Reset these^ to 0 so they don't get passed onto the next generation
-		this.countNodesWithLimit(this.root, maxAdditionHeight)
-		
+		this.countNodesWithLimit(this.root, injectionHeight, maxEvolvedHeightLimit)
 		
 		Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
-		pickNodeWithLimit(this.root, randomChildNumber, maxAdditionHeight)
+		pickNodeWithLimit(this.root, randomChildNumber, injectionHeight, maxEvolvedHeightLimit)
 		this.selectedNode
 	}
     
-	//TODO THIS IS WHERE THE PROBLEM IS!
-    public pickNodeWithLimit(Node node, Integer desiredIndex, Integer maxAdditionHeight){
+    public pickNodeWithLimit(Node node, Integer desiredIndex, Integer injectionHeight, Integer maxEvolvedHeightLimit){
         if(node != null){
-			if(node.getNodeHeight() <= maxAdditionHeight){
+			if(node.depth + injectionHeight <= maxEvolvedHeightLimit){
 				this.selectedNodeIndex += 1
 	            if(desiredIndex == this.selectedNodeIndex){
-					//IN OTHER FUNCTION IT'S desiredIndex == this.selectedNodeIndex
-					//if height is ok
 	                this.selectedNode = node
 	            }
 				//if reached height cap we skip last if
 			}
             
-            pickNodeWithLimit(node.left, desiredIndex, maxAdditionHeight)
-            pickNodeWithLimit(node.right, desiredIndex, maxAdditionHeight)
+            pickNodeWithLimit(node.left, desiredIndex, injectionHeight, maxEvolvedHeightLimit)
+            pickNodeWithLimit(node.right, desiredIndex, injectionHeight, maxEvolvedHeightLimit)
         }
     }
 	
-	public countNodesWithLimit(Node node, Integer maxAdditionHeight){
+	public countNodesWithLimit(Node node, Integer injectionHeight, Integer maxEvolvedHeightLimit){
+		
 		if(node != null){
-			if(node.getNodeHeight() <= maxAdditionHeight){
+			if(node.depth + injectionHeight <= maxEvolvedHeightLimit){
 				this.numberOfNodes += 1
 			}
 			//if node height is too big, we skip over that node and go to the children
-			countNodesWithLimit(node.left, maxAdditionHeight)
-			countNodesWithLimit(node.right, maxAdditionHeight)
+			countNodesWithLimit(node.left, injectionHeight, maxEvolvedHeightLimit)
+			countNodesWithLimit(node.right, injectionHeight, maxEvolvedHeightLimit)
 		}
 		this.numberOfNodes
 		//TODO ^I don't think we need this
@@ -138,7 +135,7 @@ class Tree {
 		for(Map.Entry<Double, Double> entry : dataSet.entrySet()){
 			totalError += this.singlePointError(entry.getKey(), entry.getValue())
 		}
-		this.fitness = 1.0/Math.sqrt(totalError)
+		this.fitness = Math.sqrt(totalError)
 	}
 	
 	//Dataset is <xValue, functionOutput>
