@@ -1,7 +1,7 @@
 package symbolicRegression
 
 class Node {
-    def value, depth
+    def value
     Node parent, left, right
     def directionFromParent
 	
@@ -12,28 +12,10 @@ class Node {
     
     public Node(value){
         this.value = value
-        if(this.parent == null){
-            this.depth = 0
-        }
     }
 	
 	public Node(){
 	}
-	
-//	public copyChildren(Node node){
-//		node = this.cloneNode()
-//		println "original node " + this
-//		println "cloned node " + node
-//		
-//		if(this.left != null){
-//			node.left = new Node()
-//			this.left.copyChildren(node.left)
-//		}
-//		if(this.right != null){
-//			node.right = new Node()
-//			this.right.copyChildren(node.right)
-//		}
-//	}
 	
 	public stringForm(){
 		if(this.nonTerminals.contains(this.value)){
@@ -46,8 +28,6 @@ class Node {
 	
 	public cloneNode(){
 		Node node = new Node(this.value)
-		node.setDepth(this.depth)
-		node
 		
 		if(this.left != null){
 			node.setLeft(this.left.cloneNode())
@@ -75,7 +55,6 @@ class Node {
 			return height + maxHeight		
 	}
 	
-    
     public setValue(def value){
         this.value = value
     }
@@ -85,26 +64,31 @@ class Node {
     }
     
     public setLeft(Node left){
-        this.left = left
         left.setParent(this)
-        left.depth = this.depth + 1
+		this.left = left
         this.left.directionFromParent = "left"
     }
+	
+	public setRight(Node right){
+		right.setParent(this)
+		this.right = right
+		this.right.directionFromParent = "right"
+	}
     
     public setDirectionFromParent(String direction){
         this.directionFromParent = direction
     }
     
-    public setRight(Node right){
-        this.right = right
-        right.setParent(this)
-        right.depth = this.depth + 1
-        this.right.directionFromParent = "right"
-    }
-    
     public isTerminal(){
         !nonTerminals.contains(this.value)
     }
+	
+	public getDepth(){
+		if(this.parent != null){
+			return this.parent.getDepth() + 1
+		}
+		0
+	}
     
     public computeNodeValue(def input){
         switch(this.value){

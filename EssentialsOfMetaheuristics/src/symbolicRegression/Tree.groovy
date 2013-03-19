@@ -9,24 +9,34 @@ class Tree {
     Double fitness
 	Double normalizedFitness
     def nonTerminalNodes
-    def randomNodeIndex
-    Node desiredNode
-	def maxAdditionHeight
-	def maxEvolvedHeightLimit
+	def maxHeightLimit
+	List<Node> allNodes = new ArrayList<Node>()
 	
-    def numberOfNodes, selectedNodeIndex
-    Node selectedNode
     
     Random random = new Random()
     def nodeValues = ["+", "-", "*", "/", terminalValue]
     
-    public Tree(def terminalValue, Integer depthLimit){
+    public Tree(def terminalValue, Integer depthLimit, Integer maxHeightLimit){
         this.terminalValue = terminalValue
         this.depthLimit = depthLimit
-        this.numberOfNodes = 0
-        this.selectedNodeIndex = 1
+		this.maxHeightLimit = maxHeightLimit
         this.createTree()
+		findNodes(root)
     }
+	
+	public Tree(Node rootNode, Integer maxHeightLimit){
+		this.root = rootNode
+		this.terminalValue = root.value
+		this.depthLimit = rootNode.getNodeHeight()-1
+		this.maxHeightLimit = maxHeightLimit
+		
+		findNodes(root)
+	}
+	
+	public createTree(){
+		//TODO root not be x, but everything else can be x
+		this.root = grow(1, this.depthLimit)
+	}
 	
 	public printTree(){
 		TreePrinter.printNode(this.root)
@@ -38,88 +48,30 @@ class Tree {
 		clonedTree
 	}
 	
-    public pickRandomNode(){
-		this.selectedNodeIndex = 0
-		this.numberOfNodes = 0
-		this.selectedNode = null
-		//Reset these^ to 0 so they don't get passed onto the next generation
-		this.countNodes(this.root)
-        Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
-        pickNode(this.root, randomChildNumber)
-		this.selectedNode
+    public pickRandomNode(Integer insertedTreeHeight){
+		List<Node> heightRestrictedList = new ArrayList<Node>()
+		
+		allNodes.size().times{
+			Node n = allNodes.get(it)
+			if((n.getDepth() + insertedTreeHeight) <= maxHeightLimit){
+				heightRestrictedList.add(n)
+			}
+		}
+		def randomIndex = random.nextInt(heightRestrictedList.size())
+		heightRestrictedList.get(randomIndex)
     }
 	
-	public pickNode(Node node, Integer desiredIndex){
-		if(node != null){
-			this.selectedNodeIndex += 1
-			if(desiredIndex == this.selectedNodeIndex){
-				this.selectedNode = node
-			}
-			pickNode(node.left, desiredIndex)
-			pickNode(node.right, desiredIndex)
+	public findNodes(Node node){
+		allNodes.add(node)
+		if(node.left != null){
+			findNodes(node.left)
 		}
-	}
-	
-	public countNodes(Node node){
-		if(node != null){
-			this.numberOfNodes += 1
-			countNodes(node.left)
-			countNodes(node.right)
+		if(node.right != null){
+			findNodes(node.right)
 		}
-		this.numberOfNodes
-		//TODO ^I don't think we need this
-	}
-	
-	public pickRandomNodeWithLimit(Integer injectionHeight, Integer maxEvolvedHeightLimit){
-		selectedNodeIndex = 0
-		numberOfNodes = 0
-		selectedNode = null
-		//Reset these^ to 0 so they don't get passed onto the next generation
-		countNodesWithLimit(this.root, injectionHeight, maxEvolvedHeightLimit)
 		
-		if(this.numberOfNodes == null || this.numberOfNodes <= 0){
-			println "this.root is it null? " + this.root
-			println "number of nodes done goofed: " + this.numberOfNodes //ie 0
-			println "injectionHeight: " + injectionHeight //ie 6
-			println "maxEvolvedHeightLimit: " + maxEvolvedHeightLimit //ie 12
-		}
-		Integer randomChildNumber = random.nextInt(this.numberOfNodes) + 1
-		pickNodeWithLimit(this.root, randomChildNumber, injectionHeight, maxEvolvedHeightLimit)
-		this.selectedNode
 	}
-    
-    public pickNodeWithLimit(Node node, Integer desiredIndex, Integer injectionHeight, Integer maxEvolvedHeightLimit){
-        if(node != null){
-			if(node.depth + injectionHeight <= maxEvolvedHeightLimit){
-				this.selectedNodeIndex += 1
-	            if(desiredIndex == this.selectedNodeIndex){
-	                this.selectedNode = node
-	            }
-			}
-            pickNodeWithLimit(node.left, desiredIndex, injectionHeight, maxEvolvedHeightLimit)
-            pickNodeWithLimit(node.right, desiredIndex, injectionHeight, maxEvolvedHeightLimit)
-        }
-    }
-	
-	public countNodesWithLimit(Node node, Integer injectionHeight, Integer maxEvolvedHeightLimit){
-		
-		if(node != null){
-			if(node.depth + injectionHeight <= maxEvolvedHeightLimit){
-				this.numberOfNodes += 1
-			}
-			//if node height is too big, we skip over that node and go to the children
-			countNodesWithLimit(node.left, injectionHeight, maxEvolvedHeightLimit)
-			countNodesWithLimit(node.right, injectionHeight, maxEvolvedHeightLimit)
-		}
-//		else{
-//			//HAS TO PRINT ALL THIS FOR DEBUGGING
-//			println "node.depth: " + node
-//			println "injectionHeight: " + injectionHeight
-//			println "maxEvolvedHeightLimit: " + maxEvolvedHeightLimit
-//		}
-		this.numberOfNodes
-		//TODO ^I don't think we need this
-	}
+
 	
     
     public replaceNode(Node originalNode, Node replacementNode){
@@ -158,11 +110,6 @@ class Tree {
 	public setNormalizedFitness(def normalizedFitnessValue){
 		this.normalizedFitness = normalizedFitnessValue
 	}
-    
-    public createTree(){
-        //TODO root not be x, but everything else can be x
-        this.root = grow(1, this.depthLimit)
-    }
     
     public pickSubtree(){
         //TODO do I want to be able to crossover between different trees or just
