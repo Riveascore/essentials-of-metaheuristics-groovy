@@ -31,6 +31,7 @@ class Tree {
 		this.maxHeightLimit = maxHeightLimit
 		findNodes(root)
 	}
+	//this^ constructor is for cloneTree()
 	
 	public Tree(def terminalValue, String treeFunction, Integer maxHeightLimit){
 		NodeMaker nm1 = new NodeMaker(treeFunction)

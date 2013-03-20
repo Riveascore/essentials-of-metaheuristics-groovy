@@ -44,7 +44,7 @@ class NodeMakerTest extends Specification{
 			println tree.allNodes.get(it).value
 		}
 
-		println "cloend tree"
+		println "cloned tree"
 		clonedTree.printTree()
 		clonedTree.allNodes.size.times(){
 			println clonedTree.allNodes.get(it).value
@@ -53,20 +53,74 @@ class NodeMakerTest extends Specification{
 		true
 	}
 
+	@Ignore
 	def "Test crossover with printing"(){
 		given:
 		Integer maxTreeHeight = 5
 		GeneticOperators operators = new GeneticOperators()
 		
-		Tree tree = new Tree('x', '(((x*x)+x)+((x+x)-x))', maxTreeHeight)
-		tree.printTree()
-//		operators.crossover(null)
+		Tree tree1 = new Tree('x', '(((x*x)+x)+((x+x)-x))', maxTreeHeight)
+		Tree tree2 = new Tree('x', '(x+((x-x)*x))', maxTreeHeight)
+		Tree tree3 = new Tree('x', '(x*(x+x))', maxTreeHeight)
 		
+		tree1.printTree()
+		tree2.printTree()
+		tree3.printTree()
+		
+		Population population = new Population('x', 4, 3, maxTreeHeight)
+		population.addTree(tree1)
+		population.addTree(tree2)
+		population.addTree(tree3)
+		
+		DataSet dataSet = new DataSet(100)
+		dataSet.createData()
+		
+		population.generateFitness(dataSet.data)
+		// have to generate fitnesses for dataSet before we can do crossover
+		Tree tree4 = operators.crossover(population)
+		
+		tree4.printTree()
 		expect:
 		true
 	}
 	
-	def "test mutation 100 times for height overflow"(){
+	def "crossover 100 times for height overflow"(){
+		given:
+		Integer maxTreeHeight = 5
+		GeneticOperators operators = new GeneticOperators()
+		
+		Tree tree1 = new Tree('x', '(((x*x)+x)+((x+x)-x))', maxTreeHeight)
+		Tree tree2 = new Tree('x', '(x+((x-x)*x))', maxTreeHeight)
+		Tree tree3 = new Tree('x', '(x*(x+x))', maxTreeHeight)
+		
+		Population population = new Population('x', 4, 3, maxTreeHeight)
+		population.addTree(tree1)
+		population.addTree(tree2)
+		population.addTree(tree3)
+		
+		DataSet dataSet = new DataSet(100)
+		dataSet.createData()
+		
+		population.generateFitness(dataSet.data)
+		Boolean heightOverflow = false
+		Tree crossedoverTree
+		Integer height = 0
+		
+		100.times{
+			crossedoverTree = null
+			crossedoverTree = operators.crossover(population)
+			height = crossedoverTree.root.getNodeHeight()
+			heightOverflow = (height > maxTreeHeight)
+		}
+		expect:
+		heightOverflow == false
+		//TODO find a way to see if population has changed, may be as easy as:
+		//make copy of population, do crossovers, at end
+		//expect:
+		//clonedPopulation == population
+	}
+	
+	def "mutation 100 times for height overflow"(){
 		given:
 		Integer maxTreeHeight = 5
 		GeneticOperators operators = new GeneticOperators()

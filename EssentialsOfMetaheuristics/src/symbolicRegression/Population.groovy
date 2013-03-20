@@ -5,7 +5,7 @@ class Population {
 	List<Tree> population
 	def terminalValue
 	def currentDepthLimit
-	def maxEvolvedHeightLimit
+	def maxTreeHeight
 	def initialGenerationDepth
 	Tree mostFitIndividual
 	Random random = new Random()
@@ -15,7 +15,7 @@ class Population {
 	public Population(def terminalValue, def depthLimit, Integer populationSize, def maxEvolvedHeightLimit){
 		this.terminalValue = terminalValue
 		this.currentDepthLimit = depthLimit
-		this.maxEvolvedHeightLimit = maxEvolvedHeightLimit
+		this.maxTreeHeight = maxEvolvedHeightLimit
 		population = new ArrayList<Tree>(populationSize)
 	}
 	

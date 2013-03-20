@@ -17,7 +17,7 @@ class GeneticOperators {
 		newPopulation
 	}
 	
-	public tournamentSelection(Integer tournamentSize, Population population){
+	public tournamentSelection(Population population, Integer tournamentSize){
 		Tree bestParticipator = population.selectTree()
 
 		Tree temporaryParticipator
@@ -47,8 +47,14 @@ class GeneticOperators {
 	}
 	
 	public crossover(Population population){
-		Tree tree1 = this.tournamentSelection(population, population.populationSize)
-		Tree tree2 = this.tournamentSelection(population, population.populationSize)
+		Tree tree1 = this.tournamentSelection(population, population.population.size())
+		Tree tree2 = this.tournamentSelection(population, population.population.size())
+		
+		println "tournament winner injectionGenes: "
+		tree1.printTree()
+		
+		println "2nd tournament winner get replaced: "
+		tree2.printTree()
 		
 		Tree injectionGeneTree = tree1.cloneTree()
 		Tree replacedGeneTree = tree2.cloneTree()
@@ -60,6 +66,11 @@ class GeneticOperators {
 		def injectionHeightLimit = replacedNode.getNodeHeight()
 		
 		Node injectionNode = injectionGeneTree.pickRandomNode(injectionHeightLimit)
+		println "injection branch:"
+		TreePrinter.printNode(injectionNode)
+		println "replaced spot: " + replacedNode.value
+		
+		
 		
 		replacedGeneTree.replaceNode(replacedNode, injectionNode)
 		//TODO allowed to crossover with same tree? IE tree1 crossover into tree1
