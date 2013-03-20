@@ -39,6 +39,17 @@ class Population {
 		}
 	}
 	
+	public getTallestTree(){
+		ArrayList<Tree> orderedByHeight = new ArrayList<Tree>()
+		population.each {
+			orderedByHeight.add(it)
+		}
+		orderedByHeight.sort{
+			it.root.getNodeHeight()
+		}
+		orderedByHeight.get(orderedByHeight.size()-1).root.getNodeHeight()
+	}
+	
 	public generateFitness(Map<Double, Double> dataSet){
 		
 		population.each {

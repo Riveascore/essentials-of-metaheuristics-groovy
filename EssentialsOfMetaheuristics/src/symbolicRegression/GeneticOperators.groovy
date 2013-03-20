@@ -26,8 +26,7 @@ class GeneticOperators {
 			population.selectTree()
 		}
 		else{
-//			crossover(population)
-			mutate(population.selectTree())
+			crossover(population)
 		}
 	}
 	
@@ -49,16 +48,10 @@ class GeneticOperators {
 		Tree injectionGeneTree = tree1.cloneTree()
 		Tree replacedGeneTree = tree2.cloneTree()
 		
-		Node replacedNode = replacedGeneTree.pickRandomNode(0)
-		//0 means this is not constrained, can pick any node here!
-		//But now, the injection node decision will be constrained!
+		Node injectionNode = injectionGeneTree.pickRandomNode(0)
+		def injectionHeight = injectionNode.getNodeHeight()
 		
-		def injectionHeightLimit = replacedNode.getNodeHeight()
-		println "inj height lim" + injectionHeightLimit
-		
-		Node injectionNode = injectionGeneTree.pickRandomNode(injectionHeightLimit)
-		//TODO Right here^ is where it's shitting itself, it's getting a number over maxHeight, this somehow happens with crossover
-		//in the first place, I think we're just off by one when restricting or something in tree
+		Node replacedNode = replacedGeneTree.pickRandomNode(injectionHeight)
 		
 		replacedGeneTree.replaceNode(replacedNode, injectionNode)
 		replacedGeneTree
