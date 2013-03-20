@@ -1,7 +1,8 @@
 package symbolicRegression
 
 class GeneticOperators {
-
+	Random random = new Random()
+	
 	public GeneticOperators(){
 	}
 	
@@ -67,15 +68,16 @@ class GeneticOperators {
 	
 	public mutate(Tree originalTree){
 		Integer additionHeightLimit = originalTree.maxHeightLimit - originalTree.root.getNodeHeight()
-		//TODO CALCULATE THIS^ AFTER RANDOMLY PICKED NODE
 		
-		Tree newTree = originalTree.cloneTree()
-		Node replaceThisNode = newTree.pickRandomNode()
+		Tree clonedTree = originalTree.cloneTree()
 		
-		Tree injectionTree = new Tree(newTree.terminalValue, additionHeightLimit)
+		Integer injectionTreeHeight = random.nextInt(clonedTree.maxHeightLimit)+1
+		Tree injectionTree = new Tree(clonedTree.terminalValue, injectionTreeHeight, clonedTree.maxHeightLimit)
 		
-		//TODO AT SOME POINT change depthLimit in Tree to height if we have time
-		newTree.replaceNode(replaceThisNode, injectionTree.root)
-		newTree
+		Node replaceThisNode = clonedTree.pickRandomNode(injectionTree.root.getNodeHeight())
+		Node injectionNode = injectionTree.root
+		
+		clonedTree.replaceNode(replaceThisNode, injectionNode)
+		clonedTree
 	}
 }

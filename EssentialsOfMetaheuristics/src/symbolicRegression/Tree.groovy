@@ -24,9 +24,9 @@ class Tree {
 		findNodes(root)
     }
 	
-	public Tree(Node rootNode, Integer maxHeightLimit){
+	public Tree(def terminalValue, Node rootNode, Integer maxHeightLimit){
 		this.root = rootNode
-		this.terminalValue = root.value
+		this.terminalValue = terminalValue
 		this.depthLimit = rootNode.getNodeHeight()-1
 		this.maxHeightLimit = maxHeightLimit
 		
@@ -43,8 +43,7 @@ class Tree {
 	}
 	
 	public cloneTree(){
-		Tree clonedTree = new Tree(this.terminalValue, this.depthLimit)
-		clonedTree.root = this.root.cloneNode()
+		Tree clonedTree = new Tree(this.terminalValue, this.root.cloneNode(), this.maxHeightLimit)
 		clonedTree
 	}
 	
