@@ -60,10 +60,9 @@ class Tree {
     public pickRandomNode(Integer insertedTreeHeight){
 		List<Node> heightRestrictedList = new ArrayList<Node>()
 		
-		allNodes.size().times{
-			Node n = allNodes.get(it)
-			if((n.getDepth() + insertedTreeHeight) <= maxHeightLimit){
-				heightRestrictedList.add(n)
+		allNodes.each {
+			if((it.getDepth() + insertedTreeHeight) <= maxHeightLimit){
+				heightRestrictedList.add(it)
 			}
 		}
 		def randomIndex = random.nextInt(heightRestrictedList.size())

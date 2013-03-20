@@ -6,55 +6,45 @@ class GeneticOperators {
 	public GeneticOperators(){
 	}
 	
-	public matingSeason(population){
-		Population newPopulation = new Population(population.terminalValue, population.currentDepthLimit, population.populationSize, population.maxEvolvedHeightLimit)
-
+	public matingSeason(Population population){
+		Population newPopulation = new Population(population.terminalValue, population.currentDepthLimit, population.maxTreeHeight)
+		
 		Tree newTree
-		populationSize.times{
-			newTree = this.reproduce()
-			newPopulation.population.add(newTree)
+		population.size().times{
+			newTree = reproduce(population)
+			newPopulation.add(newTree)
 		}
 		newPopulation
 	}
 	
-	public tournamentSelection(Population population, Integer tournamentSize){
-		Tree bestParticipator = population.selectTree()
-
-		Tree temporaryParticipator
-		(tournamentSize-1).times{
-			temporaryParticipator = population.selectTree()
-			
-
-			if(temporaryParticipator.normalizedFitness > bestParticipator.normalizedFitness){
-				bestParticipator = temporaryParticipator
-			}
-		}
-		
-		bestParticipator
-	}
-	
-	public reproduce(){
+	public reproduce(Population population){
 		Integer randomNumber = random.nextInt(100)
-		if(randomNumber == 0){
-			this.mutate(this.selectTree())
+		if((randomNumber > 0) && (randomNumber < 25)){
+			mutate(population.selectTree())
 		}
-		else if(randomNumber > 0 && randomNumber < 10){
-			this.selectTree()
+		else if(randomNumber < 50){
+			population.selectTree()
 		}
 		else{
-			this.crossover()
+//			crossover(population)
+			mutate(population.selectTree())
 		}
+	}
+	
+	public tournamentSelection(Population population, Integer tournamentSize){
+		List<Tree> tournament = new ArrayList<Tree>()
+		tournamentSize.times{
+			tournament.add(population.selectTree())
+		}
+		tournament.sort{
+			it.normalizedFitness
+		}
+		tournament.get(tournament.size()-1)
 	}
 	
 	public crossover(Population population){
 		Tree tree1 = this.tournamentSelection(population, population.population.size())
 		Tree tree2 = this.tournamentSelection(population, population.population.size())
-		
-//		println "tournament winner injectionGenes: "
-//		tree1.printTree()
-//		
-//		println "2nd tournament winner get replaced: "
-//		tree2.printTree()
 		
 		Tree injectionGeneTree = tree1.cloneTree()
 		Tree replacedGeneTree = tree2.cloneTree()
@@ -64,16 +54,13 @@ class GeneticOperators {
 		//But now, the injection node decision will be constrained!
 		
 		def injectionHeightLimit = replacedNode.getNodeHeight()
+		println "inj height lim" + injectionHeightLimit
 		
 		Node injectionNode = injectionGeneTree.pickRandomNode(injectionHeightLimit)
-//		println "injection branch:"
-//		TreePrinter.printNode(injectionNode)
-//		println "replaced spot: " + replacedNode.value
-		
-		
+		//TODO Right here^ is where it's shitting itself, it's getting a number over maxHeight, this somehow happens with crossover
+		//in the first place, I think we're just off by one when restricting or something in tree
 		
 		replacedGeneTree.replaceNode(replacedNode, injectionNode)
-		//TODO allowed to crossover with same tree? IE tree1 crossover into tree1
 		replacedGeneTree
 	}
 	

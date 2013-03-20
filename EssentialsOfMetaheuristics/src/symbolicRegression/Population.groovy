@@ -2,92 +2,75 @@ package symbolicRegression
 
 class Population {
 	Double totalFitness = 0
-	List<Tree> population
+	List<Tree> population = new ArrayList<Tree>()
 	def terminalValue
 	def currentDepthLimit
 	def maxTreeHeight
 	def initialGenerationDepth
-	Tree mostFitIndividual
 	Random random = new Random()
 
 	//TODO Fix it so we don't need to pass populationSize to "create population"
 	//TODO LOTS OF REDUNDANCIES TO FIX!!!!
-	public Population(def terminalValue, def depthLimit, Integer populationSize, def maxEvolvedHeightLimit){
+	public Population(def terminalValue, def depthLimit, def maxTreeHeight){
 		this.terminalValue = terminalValue
 		this.currentDepthLimit = depthLimit
-		this.maxTreeHeight = maxEvolvedHeightLimit
-		population = new ArrayList<Tree>(populationSize)
+		this.maxTreeHeight = maxTreeHeight
 	}
 	
 	public addTree(Tree tree){
 		population.add(tree)
 	}
 	
-	public createPopulation(){
+	public createPopulation(Integer populationSize){
 		Tree addedTree
 		
-		population.size().times{
-			addedTree = new Tree(this.terminalValue, this.currentDepthLimit)
+		populationSize.times{
+			addedTree = new Tree(terminalValue, currentDepthLimit, maxTreeHeight)
 			
 			addedTree.createTree()
 			
-			this.population.add(addedTree)
+			add(addedTree)
 		}
+	}
+	
+	public printPopulation(){
+		population.each {
+			it.printTree()
+		}
+	}
+	
+	public generateFitness(Map<Double, Double> dataSet){
+		
+		population.each {
+			it.setTreeFitness(dataSet)
+		}
+		
+		population.each {
+			totalFitness += 1.0/it.fitness
+			//sum up for normalization
+		}
+		
+		population.each {
+			it.normalizedFitness = 1.0/it.fitness/totalFitness
+		}
+		population.sort{it.normalizedFitness}
 	}
 	
 	public getMostFitIndividual(){
-		population.get(0)
+		population.get(size()-1)
 	}
 	
-
-	public generateFitness(Map<Double, Double> dataSet){
-		
-		Tree firstTree = population.get(0)
-		firstTree.setTreeFitness(dataSet)
-		
-		Integer bestFitnessIndex = 0
-		this.totalFitness += 1.0/firstTree.fitness
-		
-		(population.size()-1).times{
-			population.get(it+1).setTreeFitness(dataSet)
-			if(population.get(it+1).fitness > population.get(bestFitnessIndex).fitness){
-				bestFitnessIndex = it+1
-			}
-			this.totalFitness += 1.0/population.get(it+1).fitness
-		}
-		this.mostFitIndividual = population.get(bestFitnessIndex)
-		
-
-		Tree currentTree
-		def newFitness
-		population.size().times{
-			currentTree = this.population.get(it)
-			newFitness = currentTree.fitness/this.totalFitness
-			currentTree.setNormalizedFitness(newFitness)
-			this.population.set(it, currentTree)
-		}
-		this.sortByNormalizedFitness()
+	public size(){
+		population.size()
 	}
-	//TODO Give mutation/crossover a heightLimit value
-
-
-	//TODO possibly find more efficient method? But this works for now
-	public sortByNormalizedFitness(){
-		List<Tree> copiedList = new ArrayList(this.population)
-		List<Tree> orderedByNormalizedFitness = new ArrayList<Tree>()
-
-		population.size().times{
-			Integer smallestNormalizedFitnessIndex = 0
-			for(int i = 1; i < copiedList.size(); i++){
-				if(copiedList.get(i).normalizedFitness < copiedList.get(smallestNormalizedFitnessIndex).normalizedFitness){
-					smallestNormalizedFitnessIndex = i
-				}
-			}
-			orderedByNormalizedFitness.add(copiedList.remove(smallestNormalizedFitnessIndex))
-		}
-		this.population = orderedByNormalizedFitness
+	
+	public add(Tree tree){
+		population.add(tree)
 	}
-	//TODO put MUTATE/CROSSOVER and possibly other stuff into a "GeneticOperators"(better name?) class
+	
+	public get(Integer index){
+		population.get(index)
+	}
 
 	public selectTree(){
 		Double chosenTreeIndex = random.nextDouble();
