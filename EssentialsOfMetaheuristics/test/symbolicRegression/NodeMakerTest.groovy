@@ -84,6 +84,64 @@ class NodeMakerTest extends Specification{
 		true
 	}
 	
+	def "tree.equals() test"(){
+		given:
+		Tree tree = new Tree('x', '(((x*x)+x)+((x+x)-x))', 5)
+		Tree differentTree = new Tree('x', '(x+((x-x)*x))', 5)
+		Tree clonedTree = tree.cloneTree()
+		
+		expect:
+		tree.equals(tree)
+		tree.equals(clonedTree)
+		!tree.equals(differentTree)
+	}
+	
+	def "tournamentSelection() test to see if we're getting the same tree everytime or not"(){
+		given:
+		Integer maxTreeHeight = 5
+		GeneticOperators operators = new GeneticOperators()
+		
+		Tree tree1 = new Tree('x', '(((x*x)+x)+((x+x)-x))', maxTreeHeight)
+		Tree tree2 = new Tree('x', '(x+((x-x)*x))', maxTreeHeight)
+		Tree tree3 = new Tree('x', '(x*(x+x))', maxTreeHeight)
+		
+		Population population = new Population('x', 4, 3, maxTreeHeight)
+		population.addTree(tree1)
+		population.addTree(tree2)
+		population.addTree(tree3)
+		
+		DataSet dataSet = new DataSet(100)
+		dataSet.createData()
+		population.generateFitness(dataSet.data)
+		
+		Tree treeWinner = operators.tournamentSelection(population, population.population.size())
+//		treeWinner.printTree()
+		
+//		println "tree 2 fitness: " + population.population.get(0).fitness
+//		population.population.get(0).printTree()
+//		println "tree 1 fitness: " + population.population.get(1).fitness
+//		population.population.get(1).printTree()
+//		println "tree 3 fitness: " + population.population.get(2).fitness
+//		population.population.get(2).printTree()
+		
+		100000.times{
+			treeWinner = null
+			treeWinner = operators.tournamentSelection(population, population.population.size())
+//			println treeWinner.fitness
+			if(!treeWinner.equals(tree2)){
+				println "got something besides tree 2"
+				treeWinner.printTree()
+			}
+		}
+		
+//		println "tree1"
+//		tree1.printTree()
+//		println "treewinner"
+//		treeWinner.printTree()
+		expect:
+		true
+	}
+	
 	def "crossover 100 times for height overflow"(){
 		given:
 		Integer maxTreeHeight = 5
@@ -100,8 +158,9 @@ class NodeMakerTest extends Specification{
 		
 		DataSet dataSet = new DataSet(100)
 		dataSet.createData()
-		
 		population.generateFitness(dataSet.data)
+		
+		
 		Boolean heightOverflow = false
 		Tree crossedoverTree
 		Integer height = 0

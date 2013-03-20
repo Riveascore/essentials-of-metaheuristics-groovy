@@ -50,11 +50,11 @@ class GeneticOperators {
 		Tree tree1 = this.tournamentSelection(population, population.population.size())
 		Tree tree2 = this.tournamentSelection(population, population.population.size())
 		
-		println "tournament winner injectionGenes: "
-		tree1.printTree()
-		
-		println "2nd tournament winner get replaced: "
-		tree2.printTree()
+//		println "tournament winner injectionGenes: "
+//		tree1.printTree()
+//		
+//		println "2nd tournament winner get replaced: "
+//		tree2.printTree()
 		
 		Tree injectionGeneTree = tree1.cloneTree()
 		Tree replacedGeneTree = tree2.cloneTree()
@@ -66,9 +66,9 @@ class GeneticOperators {
 		def injectionHeightLimit = replacedNode.getNodeHeight()
 		
 		Node injectionNode = injectionGeneTree.pickRandomNode(injectionHeightLimit)
-		println "injection branch:"
-		TreePrinter.printNode(injectionNode)
-		println "replaced spot: " + replacedNode.value
+//		println "injection branch:"
+//		TreePrinter.printNode(injectionNode)
+//		println "replaced spot: " + replacedNode.value
 		
 		
 		

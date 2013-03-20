@@ -141,6 +141,24 @@ class Tree {
         //^picks the second index value until it's different than the first
     }
 	
+	public equals(Tree tree2){
+		def tree2Index = 0
+		def firstValue
+		def secondValue
+		Boolean equivalent = false
+		
+		if(this.allNodes.size() == tree2.allNodes.size()){
+			equivalent = true
+			this.allNodes.each {
+				secondValue = tree2.allNodes.get(tree2Index).value
+				if(it.value != secondValue){
+					equivalent = false
+				}
+				tree2Index++
+			}
+		}
+		equivalent
+	}
 
     
     public grow(depth, maxDepth){
