@@ -3,63 +3,28 @@ package symbolicRegression
 class SymbolicRegressionSin {
 
 	static main(args) {
-		/*
-		 *Straight up Michael Phelps: 
-		 *((((x/x)/(x/x))+x)+(((x-x)*x)-((((x/x)/((((x/x)/(x/x))+x)/x))+x)+(((((x-x)*x)-((x*x)*(x-x)))*x)-((x*x)*(x-x))))))    
-		 *and his fitness: 3.039982914735619
-		 *BUT HE REDUCES TO!!!
-		 *1/(1+x)
-		 */
+		Integer maxTreeHeight = 10
+		GeneticOperators operators = new GeneticOperators()
 		
-		Random random = new Random()
+		Population currentPopulation = new Population('x', 4, maxTreeHeight)
+		currentPopulation.createPopulation(500)
 		
-		Integer maxGenerations = 100
-		Double fitnessThreshold = 1.0
-		Integer initialDepthLimit = 5 
-		//random.nextInt(5)+2
-		Integer populationSize = 500
-		Integer maxTreeHeight = 12
-		//Initialize stuff hur^
 		
-		Integer currentGenerationNumber = 0
-		Population currentPopulation = new Population('x', initialDepthLimit, populationSize, maxTreeHeight)
-//		new Population(terminalValue, depthLimit, populationSize, maxEvolvedHeightLimit)
-		Population newPopulation
-		currentPopulation.createPopulation()
-		Tree michaelPhelps
-
-		DataSet dataSet = new DataSet(20)
+		DataSet dataSet = new DataSet(100)
 		dataSet.createData()
 		
-
 		currentPopulation.generateFitness(dataSet.data)
-		Tree mostFitIndividual = currentPopulation.getMostFitIndividual()
-		michaelPhelps = mostFitIndividual
 		
-		Boolean fitnessTermination = mostFitIndividual.fitness > fitnessThreshold
-		Boolean generationTermination = currentGenerationNumber < maxGenerations
-
-		while(fitnessTermination && generationTermination){
-			currentPopulation = currentPopulation.matingSeason()
+		println "gen0 most fit " + currentPopulation.getMostFitIndividual().fitness
+		Integer currentGeneration = 0
+		
+		while(currentPopulation.getMostFitIndividual().fitness > 1){
+			currentPopulation = operators.matingSeason(currentPopulation)
 			currentPopulation.generateFitness(dataSet.data)
-			currentGenerationNumber++
-
-			mostFitIndividual = currentPopulation.getMostFitIndividual()
-			if(mostFitIndividual.fitness < michaelPhelps.fitness){
-				michaelPhelps = mostFitIndividual
-			}
-			println "Generation " + currentGenerationNumber + " has ran."
-			fitnessTermination = mostFitIndividual.fitness > fitnessThreshold
-			generationTermination = currentGenerationNumber < maxGenerations
+			println "Ran generation " + currentGeneration
+			currentGeneration++
 		}
-		println "Generation" + currentGenerationNumber + " Most fit individual:"
-		
-		println "Generation" + currentGenerationNumber + "   Most fit individual: " + mostFitIndividual.fitness
-		println "FUNCTION FORM: " + mostFitIndividual.root.stringForm()
-		
-		println "Straight up Michael Phelps: " + michaelPhelps.root.stringForm() + "    and his fitness: " + michaelPhelps.fitness
-		
-		
-		
+		println "Generation " + currentGeneration + "'s most fit: " + currentPopulation.getMostFitIndividual().fitness
+		println "Function representation: " + currentPopulation.getMostFitIndividual().root.stringForm()
 	}
 }

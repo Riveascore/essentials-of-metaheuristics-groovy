@@ -20,11 +20,11 @@ class GenerateNewGenerationsTest extends Specification{
 	
 	def "matingSeason test"(){
 		given:
-		Integer maxTreeHeight = 8
+		Integer maxTreeHeight = 10
 		GeneticOperators operators = new GeneticOperators()
 		
 		Population currentPopulation = new Population('x', 4, maxTreeHeight)
-		currentPopulation.createPopulation(10)
+		currentPopulation.createPopulation(500)
 		
 		
 		DataSet dataSet = new DataSet(100)
@@ -35,14 +35,7 @@ class GenerateNewGenerationsTest extends Specification{
 		println "gen0 most fit " + currentPopulation.getMostFitIndividual().fitness
 		Integer currentGeneration = 0
 		
-//		50.times{
-//			currentPopulation = operators.matingSeason(currentPopulation)
-//			currentPopulation.generateFitness(dataSet.data)
-//			println "Ran generation " + currentGeneration 
-//			currentGeneration++
-//		}
-		
-		while(currentPopulation.getMostFitIndividual().fitness > 5){
+		while(currentPopulation.getMostFitIndividual().fitness > 2){
 			currentPopulation = operators.matingSeason(currentPopulation)
 			currentPopulation.generateFitness(dataSet.data)
 			println "Ran generation " + currentGeneration
@@ -50,6 +43,9 @@ class GenerateNewGenerationsTest extends Specification{
 		}
 		println "Generation " + currentGeneration + "'s most fit: " + currentPopulation.getMostFitIndividual().fitness
 		println "Function representation: " + currentPopulation.getMostFitIndividual().root.stringForm()
+		
+		expect:
+		true
 	}
 }
 
