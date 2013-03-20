@@ -53,14 +53,25 @@ class NodeMakerTest extends Specification{
 		true
 	}
 
+	def "Test crossover with printing"(){
+		given:
+		Integer maxTreeHeight = 5
+		GeneticOperators operators = new GeneticOperators()
+		
+		Tree tree = new Tree('x', '(((x*x)+x)+((x+x)-x))', maxTreeHeight)
+		tree.printTree()
+//		operators.crossover(null)
+		
+		expect:
+		true
+	}
+	
 	def "test mutation 100 times for height overflow"(){
 		given:
 		Integer maxTreeHeight = 5
 		GeneticOperators operators = new GeneticOperators()
-		NodeMaker nm1 = new NodeMaker('(((x*x)+x)+((x+x)-x))')
-		Node testRoot = nm1.makeNode()
 
-		Tree tree = new Tree('x', testRoot, maxTreeHeight)
+		Tree tree = new Tree('x', '(((x*x)+x)+((x+x)-x))', maxTreeHeight)
 
 		Boolean overflowHeight = false
 		Tree mutatedTree

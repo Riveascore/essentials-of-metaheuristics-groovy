@@ -27,9 +27,18 @@ class Tree {
 	public Tree(def terminalValue, Node rootNode, Integer maxHeightLimit){
 		this.root = rootNode
 		this.terminalValue = terminalValue
-		this.depthLimit = rootNode.getNodeHeight()-1
+		this.depthLimit = root.getNodeHeight()-1
 		this.maxHeightLimit = maxHeightLimit
-		
+		findNodes(root)
+	}
+	
+	public Tree(def terminalValue, String treeFunction, Integer maxHeightLimit){
+		NodeMaker nm1 = new NodeMaker(treeFunction)
+		Node nodeMakerNode = nm1.makeNode()
+		this.root = nodeMakerNode
+		this.terminalValue = terminalValue
+		this.depthLimit = root.getNodeHeight()-1
+		this.maxHeightLimit = maxHeightLimit
 		findNodes(root)
 	}
 	

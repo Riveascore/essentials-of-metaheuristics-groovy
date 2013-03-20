@@ -46,20 +46,20 @@ class GeneticOperators {
 		}
 	}
 	
-	public crossover(){
-		Tree tree1 = this.tournamentSelection(this.populationSize)
-		Tree tree2 = this.tournamentSelection(this.populationSize)
+	public crossover(Population population){
+		Tree tree1 = this.tournamentSelection(population, population.populationSize)
+		Tree tree2 = this.tournamentSelection(population, population.populationSize)
 		
 		Tree injectionGeneTree = tree1.cloneTree()
 		Tree replacedGeneTree = tree2.cloneTree()
 		
-		Node replacedNode = replacedGeneTree.pickRandomNode()
-		//Not constrained, can pick any node here!
+		Node replacedNode = replacedGeneTree.pickRandomNode(0)
+		//0 means this is not constrained, can pick any node here!
 		//But now, the injection node decision will be constrained!
 		
-		def injectionHeight = replacedNode.getNodeHeight()
+		def injectionHeightLimit = replacedNode.getNodeHeight()
 		
-		Node injectionNode = injectionGeneTree.pickRandomNodeWithLimit(injectionHeight, this.maxEvolvedHeightLimit)
+		Node injectionNode = injectionGeneTree.pickRandomNode(injectionHeightLimit)
 		
 		replacedGeneTree.replaceNode(replacedNode, injectionNode)
 		//TODO allowed to crossover with same tree? IE tree1 crossover into tree1

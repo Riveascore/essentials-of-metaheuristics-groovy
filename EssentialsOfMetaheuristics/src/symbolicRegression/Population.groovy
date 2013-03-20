@@ -2,10 +2,9 @@ package symbolicRegression
 
 class Population {
 	Double totalFitness = 0
-	List<Tree> population = new ArrayList<Tree>()
+	List<Tree> population
 	def terminalValue
 	def currentDepthLimit
-	def populationSize
 	def maxEvolvedHeightLimit
 	def initialGenerationDepth
 	Tree mostFitIndividual
@@ -17,17 +16,20 @@ class Population {
 		this.terminalValue = terminalValue
 		this.currentDepthLimit = depthLimit
 		this.maxEvolvedHeightLimit = maxEvolvedHeightLimit
-		this.populationSize = populationSize
+		population = new ArrayList<Tree>(populationSize)
+	}
+	
+	public addTree(Tree tree){
+		population.add(tree)
 	}
 	
 	public createPopulation(){
 		Tree addedTree
 		
-		populationSize.times{
+		population.size().times{
 			addedTree = new Tree(this.terminalValue, this.currentDepthLimit)
 			
 			addedTree.createTree()
-//			addedTree.maxEvolvedHeightLimit = this.maxEvolvedHeightLimit
 			
 			this.population.add(addedTree)
 		}
@@ -46,7 +48,7 @@ class Population {
 		Integer bestFitnessIndex = 0
 		this.totalFitness += 1.0/firstTree.fitness
 		
-		(populationSize-1).times{
+		(population.size()-1).times{
 			population.get(it+1).setTreeFitness(dataSet)
 			if(population.get(it+1).fitness > population.get(bestFitnessIndex).fitness){
 				bestFitnessIndex = it+1
@@ -58,7 +60,7 @@ class Population {
 
 		Tree currentTree
 		def newFitness
-		populationSize.times{
+		population.size().times{
 			currentTree = this.population.get(it)
 			newFitness = currentTree.fitness/this.totalFitness
 			currentTree.setNormalizedFitness(newFitness)
@@ -74,7 +76,7 @@ class Population {
 		List<Tree> copiedList = new ArrayList(this.population)
 		List<Tree> orderedByNormalizedFitness = new ArrayList<Tree>()
 
-		populationSize.times{
+		population.size().times{
 			Integer smallestNormalizedFitnessIndex = 0
 			for(int i = 1; i < copiedList.size(); i++){
 				if(copiedList.get(i).normalizedFitness < copiedList.get(smallestNormalizedFitnessIndex).normalizedFitness){
@@ -92,7 +94,7 @@ class Population {
 		Double sum = 0
 		Double hold = 0
 
-		for(int i = 0; i < this.populationSize; i++){
+		for(int i = 0; i < this.population.size(); i++){
 			hold = this.population.get(i).normalizedFitness
 			sum += hold
 			if(chosenTreeIndex <= sum){
