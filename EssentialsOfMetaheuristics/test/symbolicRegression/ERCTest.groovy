@@ -1,9 +1,10 @@
 package symbolicRegression
 
-import spock.lang.Specification;
+import spock.lang.*
 
 class ERCTest extends Specification{
 
+    @Ignore
     def "Random double -5 to 5 range"(){
         given:
 
@@ -22,12 +23,13 @@ class ERCTest extends Specification{
         inRange
     }
 
+    @Ignore
     def "printing trees with ERCs"(){
         given:
-
         Tree tree = new Tree('x', 6, 6)
-        
-        println "root " + tree.root.value
+
         tree.printTree()
+        expect:
+        true
     }
 }

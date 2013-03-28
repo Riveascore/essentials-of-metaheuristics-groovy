@@ -15,11 +15,12 @@ class Tree {
 
     Random random = new Random()
     def nodeValues = [
+        {-> ERC()},
+        terminalValue,
         "+",
         "-",
         "*",
         "/",
-        terminalValue
     ]
 
     public Tree(def terminalValue, Integer depthLimit, Integer maxHeightLimit){
@@ -27,6 +28,7 @@ class Tree {
         this.depthLimit = depthLimit
         this.maxHeightLimit = maxHeightLimit
         this.createTree()
+//        println "root is: " root.value
         findNodes(root)
     }
 
@@ -52,6 +54,43 @@ class Tree {
     public createTree(){
         //TODO root not be x, but everything else can be x
         this.root = grow(1, this.depthLimit)
+    }
+
+    //ephemeral random constant
+    public ERC(){
+        //Choose from -5 to 5
+        Double randomConstant = random.nextDouble()*10.0-5.0
+    }
+
+    public grow(depth, maxDepth){
+        Node node
+        if(depth >= maxDepth){
+            def TerminalOrERC = random.nextInt(9)
+            if(TerminalOrERC < 3){
+                node = new Node(ERC())
+            }
+            else{
+                node = new Node(terminalValue)
+            }
+        }
+        else{
+            def whichType = random.nextInt(6)
+            def nodeValue = nodeValues[whichType]
+            
+            if(whichType == 0){
+                node = new Node(nodeValue())
+                //^this is so we grab ERC value from closure 
+            }
+            else{
+                node = new Node(nodeValue)
+            }
+
+            if(!node.isTerminal()){
+                node.setLeft(grow(depth+1, maxDepth))
+                node.setRight(grow(depth+1, maxDepth))
+            }
+        }
+        node
     }
 
     public printTree(){
@@ -163,40 +202,6 @@ class Tree {
             }
         }
         equivalent
-    }
-    
-    //ephemeral random constant
-    public ERC(){
-        //Choose from -5 to 5
-        Double randomConstant = random.nextDouble()*10.0-5.0
-    }
-
-    public grow(depth, maxDepth){
-        Node node
-        if(depth >= maxDepth){
-            node = new Node(terminalValue)
-        }
-        else{
-            Integer whichType = random.nextInt(5)
-            def nodeValue
-            
-            //Right here we either pick +,-,/,*,x, or random constant
-//            if(whichType == 5){
-//                println ERC()
-//                nodeValue = ERC()
-//            }
-//            else{
-                nodeValue = nodeValues[whichType]
-//            }
-            println "node value: " + nodeValue
-            
-            node = new Node()
-            if(!node.isTerminal()){
-                node.setLeft(grow(depth+1, maxDepth))
-                node.setRight(grow(depth+1, maxDepth))
-            }
-            node
-        }
     }
 
     public evaluateTree(def input){
