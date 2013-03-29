@@ -111,51 +111,17 @@ class Node {
                 }
                 else{
                     this.left.computeNodeValue(input) / this.right.computeNodeValue(input)
+                    //^Used the return 1 as a guard against division by 0
                 }
-            //^Used the return 1 as a guard against division by 0
                 break
+            case Double:
+                this.value
+                break
+            
             default: input
                 break
-            //TODO possibly implement sin, cos, tan, abs, sqrt, log if we have time
         }
     }
-
-
-    //TODO RULES FOR SIMPLIFICATION:
-    /* x/x -> 1
-     * x-x -> 0
-     * anything/0 -> 1
-     * 
-     */
-
-    //	public simplify(){
-    //		switch(this.value){
-    //			case '+':
-    //			this.left.computeNodeValue(input) + this.right.computeNodeValue(input)
-    //			break
-    //
-    //			case '-':
-    //			this.left.computeNodeValue(input) - this.right.computeNodeValue(input)
-    //			break
-    //
-    //			case '*':
-    //			this.left.computeNodeValue(input) * this.right.computeNodeValue(input)
-    //			break
-    //
-    //			case '/':
-    //			if(this.right.computeNodeValue(input) == 0){
-    //				1
-    //			}
-    //			else{
-    //				this.left.computeNodeValue(input) / this.right.computeNodeValue(input)
-    //			}
-    //			//^Used the return 1 as a guard against division by 0
-    //			break
-    //			default: input
-    //			break
-    //			//TODO possibly implement sin, cos, tan, abs, sqrt, log if we have time
-    //		}
-    //	}
 }
 
 

@@ -94,7 +94,19 @@ class Tree {
     }
 
     public printTree(){
-        TreePrinter.printNode(this.root)
+        Tree treeClone = this.cloneTree()
+        
+        
+        treeClone.allNodes.each {
+            if(it.value instanceof Double){
+                it.setValue(Math.round(it.value))
+            }
+            else{
+                it
+            }
+        }
+        
+        TreePrinter.printNode(treeClone.root)
     }
 
     public cloneTree(){
@@ -151,13 +163,24 @@ class Tree {
         for(Map.Entry<Double, Double> entry : dataSet.entrySet()){
             totalError += this.singlePointError(entry.getKey(), entry.getValue())
         }
+//        if(Math.sqrt(totalError) == Double.POSITIVE_INFINITY){
+//            this.printTree()
+//        }
         this.fitness = Math.sqrt(totalError)
     }
 
     //Dataset is <xValue, functionOutput>
     public singlePointError(Double xValue, Double functionOutput){
         def treeFunctionValue = this.evaluateTree(xValue)
-        Math.pow(treeFunctionValue - functionOutput, 2.0)
+        
+        def output = Math.pow(treeFunctionValue - functionOutput, 2.0)
+        if(output == Double.POSITIVE_INFINITY){
+            println "treeFunctionValue: ${treeFunctionValue}"
+            println "functionOutput: ${functionOutput}"
+            println "treeFunctionValue - functionOutput at x: ${xValue}: ${treeFunctionValue - functionOutput}"
+            this.printTree()
+        }
+        output
     }
 
     public setNormalizedFitness(def normalizedFitnessValue){

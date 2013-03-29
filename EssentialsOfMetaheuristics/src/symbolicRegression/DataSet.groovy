@@ -15,11 +15,11 @@ class DataSet {
     
     public createData(){
         
-        Double lowerRange = 0, topRange = 2.0*Math.PI
+        Double lowerRange = -1, topRange = 1
         
-        Double timeStepSize = topRange/this.numberOfTimeSteps
+        Double timeStepSize = (topRange-lowerRange)/this.numberOfTimeSteps
         
-        Double currentInputValue = 0
+        Double currentInputValue = lowerRange
         
         for(Integer i = 0; i <= this.numberOfTimeSteps; i++){
             this.data.put(currentInputValue, createFunction(currentInputValue))
@@ -29,9 +29,7 @@ class DataSet {
     
     public createFunction(Double input){
 		
-		//TODO SOMEHOW sin[x] ISN'T WORKING CORRECTLY! FIX FIX FIX
         Math.sin(input)
-        //approximate sin(x) here^
     }
     
 }

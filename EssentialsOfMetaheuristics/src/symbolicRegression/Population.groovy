@@ -8,7 +8,7 @@ class Population {
 	def maxTreeHeight
 	def initialGenerationDepth
 	Random random = new Random()
-
+    
 	//TODO Fix it so we don't need to pass populationSize to "create population"
 	//TODO LOTS OF REDUNDANCIES TO FIX!!!!
 	public Population(def terminalValue, def depthLimit, def maxTreeHeight){
@@ -70,6 +70,10 @@ class Population {
 	public getMostFitIndividual(){
 		population.get(size()-1)
 	}
+    
+        public getBestFitness(){
+            population.get(size()-1).fitness
+        }
 	
 	public size(){
 		population.size()
