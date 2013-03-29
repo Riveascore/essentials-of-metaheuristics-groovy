@@ -65,16 +65,16 @@ class Tree {
     public grow(depth, maxDepth){
         Node node
         if(depth >= maxDepth){
-            def TerminalOrERC = random.nextInt(9)
-            if(TerminalOrERC < 3){
-                node = new Node(ERC())
-            }
-            else{
+//            def TerminalOrERC = random.nextInt(9)
+//            if(TerminalOrERC < 3){
+//                node = new Node(ERC())
+//            }
+//            else{
                 node = new Node(terminalValue)
-            }
+//            }
         }
         else{
-            def whichType = random.nextInt(6)
+            def whichType = random.nextInt(5)+1
             def nodeValue = nodeValues[whichType]
             
             if(whichType == 0){
@@ -174,12 +174,13 @@ class Tree {
         def treeFunctionValue = this.evaluateTree(xValue)
         
         def output = Math.pow(treeFunctionValue - functionOutput, 2.0)
-        if(output == Double.POSITIVE_INFINITY){
-            println "treeFunctionValue: ${treeFunctionValue}"
-            println "functionOutput: ${functionOutput}"
-            println "treeFunctionValue - functionOutput at x: ${xValue}: ${treeFunctionValue - functionOutput}"
-            this.printTree()
-        }
+//        if(output == Double.POSITIVE_INFINITY){
+//			println "root.stringForm() ${this.root.stringForm()}"
+//            println "treeFunctionValue: ${treeFunctionValue}"
+//            println "functionOutput: ${functionOutput}"
+//            println "treeFunctionValue - functionOutput at x: ${xValue}: ${treeFunctionValue - functionOutput}"
+//            this.printTree()
+//        }
         output
     }
 

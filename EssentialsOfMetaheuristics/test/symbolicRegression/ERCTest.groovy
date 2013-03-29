@@ -49,7 +49,19 @@ class ERCTest extends Specification{
         tree.printTree()
         
     }
-    
+	
+	@Ignore
+	def "How to handle /0"(){
+		given:
+		Double l = 5.0
+		Double r = -5.0 - -5.0
+		println r
+		
+		Double zero = 0.0
+		Double negZero = -0.0
+		println zero == negZero
+		println l / r
+	}
     
     //this is broken atm, gotta get trees to work
 //    @Ignore
@@ -74,7 +86,7 @@ class ERCTest extends Specification{
                 Tree mostFitOverall = currentPopulation.getMostFitIndividual()
                 mostFitThroughHistory.add(mostFitOverall)
                 
-                while(currentPopulation.getBestFitness() > 0.1){
+                while(currentPopulation.getBestFitness() > 5){
                     
                     log.log(currentPopulation, currentGeneration)    
                     
