@@ -73,7 +73,7 @@ class ERCTest extends Specification{
                 Population currentPopulation = new Population('x', 4, maxTreeHeight)
                 currentPopulation.createPopulation(500)
                 
-                DataSet dataSet = new DataSet(100)
+                DataSet dataSet = new DataSet(20)
                 dataSet.createData()
                 
                 currentPopulation.generateFitness(dataSet.data)
@@ -86,7 +86,7 @@ class ERCTest extends Specification{
                 Tree mostFitOverall = currentPopulation.getMostFitIndividual()
                 mostFitThroughHistory.add(mostFitOverall)
                 
-                while(currentPopulation.getBestFitness() > 5){
+                while(currentPopulation.getBestFitness() > 0.1){
                     
                     log.log(currentPopulation, currentGeneration)    
                     
@@ -102,6 +102,7 @@ class ERCTest extends Specification{
                 println "Most fit individuals overall:"
                 mostFitThroughHistory.each{
                     println it.root.stringForm()
+					println ""
                 }
                 
                 expect:

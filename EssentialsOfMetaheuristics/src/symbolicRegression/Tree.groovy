@@ -65,16 +65,16 @@ class Tree {
     public grow(depth, maxDepth){
         Node node
         if(depth >= maxDepth){
-//            def TerminalOrERC = random.nextInt(9)
-//            if(TerminalOrERC < 3){
-//                node = new Node(ERC())
-//            }
-//            else{
+            def TerminalOrERC = random.nextInt(9)
+            if(TerminalOrERC < 3){
+                node = new Node(ERC())
+            }
+            else{
                 node = new Node(terminalValue)
-//            }
+            }
         }
         else{
-            def whichType = random.nextInt(5)+1
+            def whichType = random.nextInt(6)
             def nodeValue = nodeValues[whichType]
             
             if(whichType == 0){
@@ -163,24 +163,13 @@ class Tree {
         for(Map.Entry<Double, Double> entry : dataSet.entrySet()){
             totalError += this.singlePointError(entry.getKey(), entry.getValue())
         }
-//        if(Math.sqrt(totalError) == Double.POSITIVE_INFINITY){
-//            this.printTree()
-//        }
         this.fitness = Math.sqrt(totalError)
     }
 
     //Dataset is <xValue, functionOutput>
     public singlePointError(Double xValue, Double functionOutput){
         def treeFunctionValue = this.evaluateTree(xValue)
-        
         def output = Math.pow(treeFunctionValue - functionOutput, 2.0)
-//        if(output == Double.POSITIVE_INFINITY){
-//			println "root.stringForm() ${this.root.stringForm()}"
-//            println "treeFunctionValue: ${treeFunctionValue}"
-//            println "functionOutput: ${functionOutput}"
-//            println "treeFunctionValue - functionOutput at x: ${xValue}: ${treeFunctionValue - functionOutput}"
-//            this.printTree()
-//        }
         output
     }
 

@@ -92,49 +92,34 @@ class Node {
     }
 
     public computeNodeValue(def input){
-		def output
+		
         switch(this.value){
             case '+':
-                output = this.left.computeNodeValue(input) + this.right.computeNodeValue(input)
-				if(output == Double.POSITIVE_INFINITY || output == Double.POSITIVE_INFINITY){
-					println "problem on +"
-				}
-				output
+				def leftSide = this.left.computeNodeValue(input)
+				def rightSide = this.right.computeNodeValue(input)
+                leftSide + rightSide
                 break
 
             case '-':
-                output = this.left.computeNodeValue(input) - this.right.computeNodeValue(input)
-				if(output == Double.POSITIVE_INFINITY || output == Double.POSITIVE_INFINITY){
-					println "problem on -"
-				}
-				output
+				def leftSide = this.left.computeNodeValue(input)
+				def rightSide = this.right.computeNodeValue(input)
+                leftSide - rightSide
                 break
 
             case '*':
-                output = this.left.computeNodeValue(input) * this.right.computeNodeValue(input)
-				if(output == Double.POSITIVE_INFINITY || output == Double.POSITIVE_INFINITY){
-					println "problem on *"
-				}
-				output
+				def leftSide = this.left.computeNodeValue(input)
+				def rightSide = this.right.computeNodeValue(input)
+                leftSide * rightSide
                 break
 
             case '/':
-				def rightSide = this.right.computeNodeValue(input)
 				def leftSide = this.left.computeNodeValue(input)
+				def rightSide = this.right.computeNodeValue(input)
                 if(Math.abs(rightSide) == 0.0){
-//					println "this.right.computeNodeValue(input): ${this.right.computeNodeValue(input)}"
-                    1
+                    1.0
                 }
                 else{
-                    output =  leftSide / this.right.computeNodeValue(input)
-					if(output == Double.POSITIVE_INFINITY || output == Double.POSITIVE_INFINITY){
-						println "problem on /"
-						println "leftSideClass = ${leftSide.getClass()}"
-						println "rightSideClass = ${rightSide.getClass()}"
-						println "LeftNode = ${leftSide}"
-						println "RightNode = ${rightSide}"
-					}
-					output
+					leftSide / rightSide
                     //^Used the return 1 as a guard against division by 0
                 }
                 break
@@ -142,7 +127,8 @@ class Node {
                 this.value
                 break
             
-            default: input
+            default: 
+				input
                 break
         }
     }
