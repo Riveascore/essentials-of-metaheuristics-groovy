@@ -20,11 +20,19 @@ class Log {
         population.population.each {
             totalFitness += it.fitness
         }
-        def bestFitness = population.getBestFitness()
-        def averageFitness = totalFitness/population.size()
-        def changeInBestFitness = bestFitness - previousBest
-        def changeInAverageFitness = averageFitness - previousAverage
-        println "${generationNumber}\t${bestFitness}\t${changeInBestFitness}\t${averageFitness}\t${changeInAverageFitness}"
+        Double bestFitness = population.getBestFitness()
+        Double averageFitness = totalFitness/population.size()
+        Double changeInBestFitness = bestFitness - previousBest
+        Double changeInAverageFitness = averageFitness - previousAverage
+        
+//        Double shit = 234234234
+//        printf("%e", shit)
+//        println "${generationNumber}\t${bestFitness}\t${changeInBestFitness}\t${averageFitness}\t${changeInAverageFitness}"
+        print "${generationNumber}\t"
+        printf("%e\t", bestFitness)
+        printf("%e\t", averageFitness)
+        printf("%e\t", changeInBestFitness)
+        printf("%e\n", changeInAverageFitness)
         
         previousBest = bestFitness
         previousAverage = averageFitness
