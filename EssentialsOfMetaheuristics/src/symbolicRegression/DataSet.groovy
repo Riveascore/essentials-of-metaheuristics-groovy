@@ -5,19 +5,22 @@ class DataSet {
     TreeMap<Double, Double> data = new TreeMap<Double, Double>()
     def numberOfTimeSteps
     def initialPopulationDepth = 5
+    def lowerRange
+    def upperRange
+    
     Random random = new Random()
 
-    public DataSet(numberOfTimeSteps){
+    public DataSet(numberOfTimeSteps, lowerRange, upperRange){
         //populationOfTrees
         this.numberOfTimeSteps = numberOfTimeSteps
+        this.lowerRange = lowerRange
+        this.upperRange = upperRange
         createData()
     }
     
     public createData(){
         
-        Double lowerRange = -1, topRange = 1
-        
-        Double timeStepSize = (topRange-lowerRange)/this.numberOfTimeSteps
+        Double timeStepSize = (upperRange-lowerRange)/this.numberOfTimeSteps
         
         Double currentInputValue = lowerRange
         

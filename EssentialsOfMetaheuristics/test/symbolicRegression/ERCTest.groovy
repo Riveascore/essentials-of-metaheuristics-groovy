@@ -61,61 +61,19 @@ class ERCTest extends Specification{
         println l / r
     }
 
-    @Ignore
+//    @Ignore
     def "Scientific notation output Testing"(){
         given:
 
         Double number = 23452342343242423
 //        System.out.printf("Scientific notation:   %e\n", number)
         printf("%e\n", number)
-        expect:
-        true
-    }
-
-    //this is broken atm, gotta get trees to work
-//    @Ignore
-    def "Printing for R input"(){
-        given:
-        Integer maxTreeHeight = 10
-        GeneticOperators operators = new GeneticOperators()
-
-        Population currentPopulation = new Population('x', 4, maxTreeHeight)
-        currentPopulation.createPopulation(500)
-
-        DataSet dataSet = new DataSet(20)
-        dataSet.createData()
-
-        currentPopulation.generateFitness(dataSet.data)
-
-        Integer currentGeneration = 0
-        Log log = new Log()
-
-
-        List<Tree> mostFitThroughHistory = new ArrayList<Tree>()
-        Tree mostFitOverall = currentPopulation.getMostFitIndividual()
-        mostFitThroughHistory.add(mostFitOverall)
-
-        while(currentPopulation.getBestFitness() > 0.1){
-
-            log.log(currentPopulation, currentGeneration)
-
-            currentPopulation = operators.matingSeason(currentPopulation)
-            currentPopulation.generateFitness(dataSet.data)
-            currentGeneration++
-            if(mostFitOverall.fitness > currentPopulation.getBestFitness()){
-                mostFitOverall = currentPopulation.getMostFitIndividual()
-                mostFitThroughHistory.add(mostFitOverall)
-            }
+        
+        File fitnessFile = new File("stuff")
+        
+        fitnessFile.withWriter {
+            it << String.format("%e\t%e", number, number)
         }
-        log.log(currentPopulation, currentGeneration)
-        mostFitOverall = currentPopulation.getMostFitIndividual()
-        mostFitThroughHistory.add(mostFitOverall)
-
-        println "Most fit individuals overall:"
-        mostFitThroughHistory.each{
-            println "${it.root.stringForm()}\n"
-        }
-
         expect:
         true
     }
