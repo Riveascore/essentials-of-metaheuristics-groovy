@@ -14,8 +14,8 @@ class FinalTest extends Specification{
 //    @Ignore
     def "-1 to 1"(){
         given:
-        File fitnessFile = new File('results/neg1To1/fitnessResults.txt')
-        File functionFile = new File('results/neg1To1/functionResults.txt')
+        File fitnessFile = new File('results/zeroToPi/fitnessResults.txt')
+        File functionFile = new File('results/zeroToPi/functionResults.txt')
 
         Integer maxTreeHeight = 10
         GeneticOperators operators = new GeneticOperators()
@@ -23,7 +23,7 @@ class FinalTest extends Specification{
         Population currentPopulation = new Population('x', 4, maxTreeHeight)
         currentPopulation.createPopulation(500)
 
-        DataSet dataSet = new DataSet(20, -1, 1)
+        DataSet dataSet = new DataSet(20, 0, Math.PI)
         dataSet.createData()
 
         currentPopulation.generateFitness(dataSet.data)
@@ -52,6 +52,6 @@ class FinalTest extends Specification{
             }
         }
         log.log(currentPopulation, currentGeneration)
-        fitnessFile.write(log.log(currentPopulation, currentGeneration))
+        fitnessFile.append(log.log(currentPopulation, currentGeneration))
     }
 }
