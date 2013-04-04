@@ -13,7 +13,7 @@ class GetData {
 		Tree bestCurentFunction = runData(lowRange, highRange, fitnessFile)
 		Tree bestFunctionAllRuns = bestCurentFunction
 		println "Run 0 completed"
-		2.times{
+		29.times{
 			File fitnessTempFile = new File("results/${rangeName}FitnessTemp.txt")
 			bestCurentFunction = runData(lowRange, highRange, fitnessTempFile)
 			if(bestCurentFunction.fitness < bestFunctionAllRuns.fitness){
@@ -68,7 +68,7 @@ class GetData {
 		
 		fitnessTempFile.write("Gen\tBestFitness\tdBestFitness\tAverageFitness\tdAverageFitness")
 	
-		while(currentGeneration < 1){
+		while(currentGeneration < 200){
 			fitnessTempFile.append(log.log(currentPopulation, currentGeneration))
 
 			currentPopulation = operators.matingSeason(currentPopulation)
