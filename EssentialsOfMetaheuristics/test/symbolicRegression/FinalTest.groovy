@@ -11,7 +11,7 @@ class FinalTest extends Specification{
         File fun = new File('results/neg1To1/fittness.txt')
         fun.write("hi")
     }
-//    @Ignore
+    @Ignore
     def "-1 to 1"(){
         given:
         File fitnessFile = new File('results/zeroToPi/fitnessResults.txt')
