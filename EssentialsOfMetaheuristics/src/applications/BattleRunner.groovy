@@ -1,0 +1,5 @@
+package applications
+
+class BattleRunner {
+
+}
