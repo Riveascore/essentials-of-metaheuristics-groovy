@@ -22,14 +22,14 @@ class TestSRFunctionRoboCodeBattle extends Specification {
 	def battleRunner
 
 	def setup() throws Exception {
-		Tree tree = new Tree(5, 5)
-		functionString = println tree.root.stringForm()
+		Tree tree = new Tree(10, 10)
+		functionString = tree.root.stringForm()
+		
 		
 		Random random = new Random()
 		id = random.nextInt(1000000)
+		println "Robot ${id}'s eval function: ${tree.root.stringForm()}"
 		
-//		functionString = "((1.234*mE)+((0.00349*eE)+((0.3939393*(mA-eA))+(289.3939*d))))"
-
 		def values = ["id" : id, "functionString" : functionString]
 
 		robotBuilder = new RobotBuilder("templates/PenaBotOS.template")
@@ -52,6 +52,7 @@ class TestSRFunctionRoboCodeBattle extends Specification {
 
 		when:
 		def score = battleRunner.runBattle(id)
+		println "Score for robot ${id} is: ${score}"
 
 		then:
 		score >= 0

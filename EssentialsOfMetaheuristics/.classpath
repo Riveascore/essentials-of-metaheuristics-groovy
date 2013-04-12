@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="lib/spock-core-0.6-groovy-1.8.jar"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>
+	<classpathentry kind="lib" path="/home/hank_hill/Downloads/jeval-0.9.4.jar"/>
+	<classpathentry kind="lib" path="/home/hank_hill/Downloads/bsh-core-2.0b4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,5 +1,6 @@
 package evolved;
 
+import bsh.Interpreter;
 import robocode.*;
 import robocode.util.Utils;
 import java.awt.Color;
@@ -8,7 +9,11 @@ import java.util.Enumeration;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
-import javax.script.*;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 
 //  HawkOnFire - a robot by rozu
 //  With evolved evaluate() component by Nic McPhee
@@ -119,7 +124,7 @@ public class Individual_${id} extends AdvancedRobot
 //- eval position ---------------------------------------------------------------------------------------------------------------------------
 	public static double evaluate(Point2D.Double p, double addLast) {
 		// this is basically here that the bot uses more space on the battlefield. In melee it is dangerous to stay somewhere too long.
-		double eval = addLast*0.08/p.distanceSq(lastPosition);
+		Double eval = addLast*0.08/p.distanceSq(lastPosition);
 
 		Enumeration<MicroEnemy> enemy_enum = enemies.elements();
 		while (enemy_enum.hasMoreElements()) {
@@ -131,6 +136,7 @@ public class Individual_${id} extends AdvancedRobot
 			//		but this wasn't going to give me good results
 			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
 			if(en.live) {
+				
 				String eE = new DecimalFormat("#").format(en.energy);
 				String mE = new DecimalFormat("#").format(myEnergy);
 				String mA = new DecimalFormat("#").format(calcAngle(myPos, p));
@@ -144,20 +150,17 @@ public class Individual_${id} extends AdvancedRobot
 				stringFunction = stringFunction.replaceAll("mA", mA);
 				stringFunction = stringFunction.replaceAll("eA", eA);
 				stringFunction = stringFunction.replaceAll("d", d);
-				//^this fucking line, it's just this one! Where do I throw exception?
 				
-				Double stringFunctionOutput;
+				Double output = 0.0;
+				Interpreter i = new Interpreter();
 				
 				try{
-					ScriptEngineManager factory = new ScriptEngineManager();
-				    // create a JavaScript engine
-				    ScriptEngine engine = factory.getEngineByName("JavaScript");
-				    stringFunctionOutput = (Double)engine.eval(stringFunction);
-				} catch (Exception se) {
-					throw new RuntimeException(se);
+					output = (Double)i.eval(stringFunction);
+				} catch(Exception e){
+				
 				}
 				
-				eval += stringFunctionOutput;
+				eval += output;
 			}
 		}
 		return eval;

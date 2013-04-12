@@ -53,6 +53,7 @@ class TestRoboCodeBattle extends Specification {
 
 		when:
 		def score = battleRunner.runBattle(id)
+		println "Score for robot ${id} is: ${score}"
 
 		then:
 		score >= 0

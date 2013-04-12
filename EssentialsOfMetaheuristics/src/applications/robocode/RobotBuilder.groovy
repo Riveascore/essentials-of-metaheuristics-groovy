@@ -23,7 +23,7 @@ class RobotBuilder {
 		}
 		def proc = command.execute(null, new File(robotDirectory))
 		proc.waitFor()
-//        println(proc.in.text)
+        println(proc.in.text)
 		assert proc.err.text.equals("")
 		assert proc.exitValue() == 0
 	}
@@ -38,7 +38,8 @@ class RobotBuilder {
 	
 	def buildClassFile(values) throws Exception {
 		def javaFileName = buildJavaFile(values)
-		def command = "javac -cp ../lib/robocode.jar ${robotPackage}/${javaFileName}"
+//		def command = "javac -cp ../lib/robocode.jar ${robotPackage}/${javaFileName}"
+		def command = "javac -cp ../lib/bsh-core-2.0b4.jar:../lib/robocode.jar ${robotPackage}/${javaFileName}"
 		def proc = command.execute(null, new File(robotDirectory))
 		proc.waitFor()
 		assert proc.exitValue() == 0

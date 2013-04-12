@@ -3,6 +3,8 @@ package symbolicRegression
 import java.util.TreeMap;
 import java.util.regex.Pattern.First;
 
+import applications.robocode.BattleRunner;
+
 class Tree {
     def depthLimit, terminalValue
     Node root
@@ -11,10 +13,12 @@ class Tree {
     def nonTerminalNodes
     def maxHeightLimit
     List<Node> allNodes = new ArrayList<Node>()
-
+	def operatorNodeCounter
+	def battleNodeCounter
+	List battleNodesToUseUp = ["eE","mE","eA","mA","d"]
 
     Random random = new Random()
-    def nodeValues = [
+    def allNodesList = [
         {-> ERC()},
         "eE",
 		"mE",
@@ -29,6 +33,9 @@ class Tree {
 	public Tree(Integer depthLimit, Integer maxHeightLimit){
 		this.depthLimit = depthLimit
 		this.maxHeightLimit = maxHeightLimit
+		Collections.shuffle(battleNodesToUseUp)
+		operatorNodeCounter = 0
+		battleNodeCounter = 0
 		this.createTree()
 //		findNodes(root)
 	}
@@ -43,32 +50,52 @@ class Tree {
         Double randomConstant = random.nextDouble()*10.0-5.0
     }
 
+	
     public grow(depth, maxDepth){
         Node node
+		def randomNumber
 		def nodeValue
-		def whichType
-        if(depth >= maxDepth){
-            whichType = random.nextInt(6)
-        }
-        else{
-            whichType = random.nextInt(9)
-        }
-		
-		nodeValue = nodeValues[whichType]
-		
-		if(whichType == 0){
-			node = new Node(nodeValue())
-			//^this is so we grab ERC value from closure
+//		println "battleNodesToUseUp.size() ${battleNodesToUseUp.size()}, battleNodeCounter ${battleNodeCounter}, operatorNodeCounter ${operatorNodeCounter}"
+		if(battleNodesToUseUp.size() > 0){
+			if(battleNodeCounter - operatorNodeCounter == 0){
+				randomNumber = random.nextInt(3)+6
+				nodeValue = allNodesList[randomNumber]
+				operatorNodeCounter++
+//				println "God operator cuz BN.size > 0, it's ${nodeValue}"
+			} else{
+				randomNumber = random.nextInt(9)
+				if(randomNumber > 0 && randomNumber < 6){
+//					println "randomly got BN"
+					nodeValue = battleNodesToUseUp.remove(0)
+					battleNodeCounter++
+				}
+				else{
+					nodeValue = allNodesList[randomNumber]
+					operatorNodeCounter++
+				}
+			}
+		} else{
+			if(depth >= maxDepth){
+				randomNumber = random.nextInt(6)
+			}
+			else{
+				randomNumber = random.nextInt(9)
+			}
+			nodeValue = allNodesList[randomNumber]
 		}
-		else{
+		
+		if(randomNumber == 0){
+			node = new Node(nodeValue())
+		}else{
 			node = new Node(nodeValue)
 		}
-		
+//		println "randomNumber ${randomNumber}, nodeValue ${nodeValue}"
 		if(!node.isTerminal()){
-			node.setLeft(grow(depth+1, maxDepth))
-			node.setRight(grow(depth+1, maxDepth))
-		}
-        node
+			
+	        node.setLeft(grow(depth+1, maxDepth))
+	        node.setRight(grow(depth+1, maxDepth))
+	    }
+		node
     }
 
     public printTree(){
