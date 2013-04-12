@@ -15,29 +15,34 @@ class BattleRunner {
 	def robotDirectoryAbsolute = new File(robotDirectory).absolutePath
 	def template
 
-	def BattleRunner(String templateFileName) {
+	def BattleRunner(String templateFileName) throws Exception {
 		def engine = new SimpleTemplateEngine()
 		template = engine.createTemplate(new File(templateFileName))
 	}
 
-	def buildBattleFile(id) {
+	def buildBattleFile(id) throws Exception {
 		File battleFile = new File("${robotDirectory}/evolve.battle")
 		battleFile.delete()
 		battleFile.createNewFile()
-		def result = template.make(["id" : id])
+		def result = this.template.make(["id" : id])
 		battleFile << result.toString()
 	}
 
-	def runBattle(id) {
+	def runBattle(id) throws Exception {
+
+
 		linkJarFile(id)
 		File battleFile = new File("${robotDirectory}/evolve.battle")
 		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath} -nodisplay"
 		def proc = command.execute(null, new File(robotDirectory))
 		proc.waitFor()
 		assert proc.exitValue() == 0
-		assert proc.err.text.equals("")
+//		assert proc.err.text.equals("")
 		def lines = proc.in.text.split("\n")
 		def result = -1
+
+
+
 		lines.each { line ->
 			def pattern = ~/evolved\.Individual_${id}\s+(\d+)/
 			def m = (line =~ pattern)
@@ -51,8 +56,8 @@ class BattleRunner {
 			throw new RuntimeException("Didn't find score for evolved robot")
 		}
 	}
-	
-	def linkJarFile(id) {
+
+	def linkJarFile(id) throws Exception {
 		def robotDir = new File("${userHome}/robocode/robots/")
 		def command = "ln -s ${robotDirectoryAbsolute}/Individual_${id}.jar ."
 		def proc = command.execute(null, robotDir)

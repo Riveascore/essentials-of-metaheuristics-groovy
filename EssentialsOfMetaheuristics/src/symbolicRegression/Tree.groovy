@@ -16,43 +16,24 @@ class Tree {
     Random random = new Random()
     def nodeValues = [
         {-> ERC()},
-        terminalValue,
+        "eE",
+		"mE",
+		"eA",
+		"mA",
+		"d",
         "+",
         "-",
         "*",
-        "/",
     ]
-
-    public Tree(def terminalValue, Integer depthLimit, Integer maxHeightLimit){
-        this.terminalValue = terminalValue
-        this.depthLimit = depthLimit
-        this.maxHeightLimit = maxHeightLimit
-        this.createTree()
-//        println "root is: " root.value
-        findNodes(root)
-    }
-
-    public Tree(def terminalValue, Node rootNode, Integer maxHeightLimit){
-        this.root = rootNode
-        this.terminalValue = terminalValue
-        this.depthLimit = root.getNodeHeight()-1
-        this.maxHeightLimit = maxHeightLimit
-        findNodes(root)
-    }
-    //this^ constructor is for cloneTree()
-
-    public Tree(def terminalValue, String treeFunction, Integer maxHeightLimit){
-        NodeMaker nm1 = new NodeMaker(treeFunction)
-        Node nodeMakerNode = nm1.makeNode()
-        this.root = nodeMakerNode
-        this.terminalValue = terminalValue
-        this.depthLimit = root.getNodeHeight()-1
-        this.maxHeightLimit = maxHeightLimit
-        findNodes(root)
-    }
+	
+	public Tree(Integer depthLimit, Integer maxHeightLimit){
+		this.depthLimit = depthLimit
+		this.maxHeightLimit = maxHeightLimit
+		this.createTree()
+//		findNodes(root)
+	}
 
     public createTree(){
-        //TODO root not be x, but everything else can be x
         this.root = grow(1, this.depthLimit)
     }
 
@@ -64,32 +45,29 @@ class Tree {
 
     public grow(depth, maxDepth){
         Node node
+		def nodeValue
+		def whichType
         if(depth >= maxDepth){
-            def TerminalOrERC = random.nextInt(9)
-            if(TerminalOrERC < 3){
-                node = new Node(ERC())
-            }
-            else{
-                node = new Node(terminalValue)
-            }
+            whichType = random.nextInt(6)
         }
         else{
-            def whichType = random.nextInt(6)
-            def nodeValue = nodeValues[whichType]
-            
-            if(whichType == 0){
-                node = new Node(nodeValue())
-                //^this is so we grab ERC value from closure 
-            }
-            else{
-                node = new Node(nodeValue)
-            }
-
-            if(!node.isTerminal()){
-                node.setLeft(grow(depth+1, maxDepth))
-                node.setRight(grow(depth+1, maxDepth))
-            }
+            whichType = random.nextInt(9)
         }
+		
+		nodeValue = nodeValues[whichType]
+		
+		if(whichType == 0){
+			node = new Node(nodeValue())
+			//^this is so we grab ERC value from closure
+		}
+		else{
+			node = new Node(nodeValue)
+		}
+		
+		if(!node.isTerminal()){
+			node.setLeft(grow(depth+1, maxDepth))
+			node.setRight(grow(depth+1, maxDepth))
+		}
         node
     }
 

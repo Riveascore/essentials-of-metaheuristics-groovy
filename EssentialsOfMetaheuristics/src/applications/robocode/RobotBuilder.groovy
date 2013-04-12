@@ -12,7 +12,7 @@ class RobotBuilder {
 		template = engine.createTemplate(new File(templateFileName))
 	}
 	
-	def buildJarFile(values) {
+	def buildJarFile(values) throws Exception {
 		buildClassFile(values)
 		buildPropertiesFile(values)
 		def id = values['id']
@@ -28,7 +28,7 @@ class RobotBuilder {
 		assert proc.exitValue() == 0
 	}
 	
-	def buildPropertiesFile(values) {
+	def buildPropertiesFile(values) throws Exception {
 		def id = values['id']
 		def filenamePrefix = "Individual_${id}"
 		def propertiesFileName = "${filenamePrefix}.properties"
@@ -36,7 +36,7 @@ class RobotBuilder {
 		propertiesFile << "robots: ${robotPackage}/${filenamePrefix}.class"
 	}
 	
-	def buildClassFile(values) {
+	def buildClassFile(values) throws Exception {
 		def javaFileName = buildJavaFile(values)
 		def command = "javac -cp ../lib/robocode.jar ${robotPackage}/${javaFileName}"
 		def proc = command.execute(null, new File(robotDirectory))
@@ -48,19 +48,19 @@ class RobotBuilder {
 //        println "stdout: ${proc.in.text}"
 	}
 	
-	def buildJavaFile(values) {
+	def buildJavaFile(values) throws Exception {
 		def javaFileName = makeJavaFileName(values)
 		File javaFile = createFile(javaFileName)
 		writeFile(javaFile, values)
 		return javaFileName
 	}
 	
-	def makeJavaFileName(values) {
+	def makeJavaFileName(values) throws Exception {
 		def id = values['id']
 		def filename = "Individual_${id}.java"
 	}
 
-	private File createFile(javaFileName) {
+	private File createFile(javaFileName) throws Exception {
 		new File(robotDirectory).mkdir()
 		new File("${robotDirectory}/${robotPackage}").mkdir()
 		File javaFile = new File("${robotDirectory}/${robotPackage}/${javaFileName}")
@@ -69,7 +69,7 @@ class RobotBuilder {
 		return javaFile
 	}
 
-	private writeFile(javaFile, values) {
+	private writeFile(javaFile, values) throws Exception {
 		def result = template.make(values)
 		javaFile << result.toString()
 	}

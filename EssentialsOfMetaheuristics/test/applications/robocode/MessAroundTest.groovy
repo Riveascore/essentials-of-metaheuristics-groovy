@@ -6,7 +6,10 @@ class MessAroundTest extends Specification{
 	
 	def "Groovy string built in vars"(){
 		given:
-		//def command = "${userHome}/robocode/robocode.sh -battle "
+		thing = ["id" : id]
+		
+		BattleRunner ourBattleRunner = new BattleRunner("templates/battle.template")
+		ourBattleRunner.buildBattleFile("5")
 		
 		
 		

@@ -8,7 +8,7 @@ class Node {
     //TODO discover limit on "depth" of tree
     //TODO ^not sure if should be def?
 
-    List nonTerminals = ["+", "-", "*", "/"]
+    List nonTerminals = ["+", "-", "*"]
 
     public Node(value){
         this.value = value
