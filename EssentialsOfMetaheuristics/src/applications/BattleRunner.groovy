@@ -1,5 +1,0 @@
-package applications
-
-class BattleRunner {
-
-}
