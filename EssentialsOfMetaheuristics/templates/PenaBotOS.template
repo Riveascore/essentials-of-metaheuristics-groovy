@@ -16,7 +16,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 
 //  HawkOnFire - a robot by rozu
-//  With evolved evaluate() component by Nic McPhee
+//  With evolved evaluate() component by Chris and Eric
 
 /*
  * This template has the following fields that need to be filled in:

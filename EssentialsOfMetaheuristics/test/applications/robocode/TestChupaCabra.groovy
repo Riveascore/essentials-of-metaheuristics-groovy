@@ -1,4 +1,5 @@
 package applications.robocode
+import symbolicRegression.Tree
 
 import spock.lang.Specification
 
@@ -8,7 +9,7 @@ import spock.lang.Specification
  * and that it has been configured (via the GUI) to be able to load robot
  * files from the evolved_robots directory in this project.
  */
-class TestRoboCodeBattle extends Specification {
+class TestChupaCabra extends Specification {
 	/*
 	 * id : an id used in the generation of the name of the class.
 	 * enemy_energy : the coefficient for the enemy's energy
@@ -17,26 +18,26 @@ class TestRoboCodeBattle extends Specification {
 	 * distance : the coefficient for the distance between the point and the enemy
 	 */
 	def id
-	def enemy_energy
-	def my_energy
-	def angle_diff
-	def distance
 	def robotBuilder
 	def battleRunner
-
+	def functionString
+	
 	def setup() {
 		Random random = new Random()
 		id = random.nextInt(1000000)
-		enemy_energy = random.nextFloat() * 100
-		my_energy = random.nextFloat() * 100
-		angle_diff = random.nextFloat() * 100
-		distance = random.nextFloat() * 100
-		def values = ["id" : id, "enemy_energy" : enemy_energy, "my_energy" : my_energy, "angle_diff" : angle_diff, "distance" : distance]
-
-		robotBuilder = new RobotBuilder("templates/HawkOnFireOS.template")
+		
+		Tree tree = new Tree(10, 10)
+		functionString = tree.root.stringForm()
+		println "Robot ${id}'s eval function:"
+		println "${functionString}"
+		
+		
+		def values = ["id" : id, "functionString" : functionString]
+		
+		robotBuilder = new RobotBuilder("templates/ChupaCabra.template")
 		robotBuilder.buildJarFile(values)
 
-		battleRunner = new BattleRunner("templates/battle.template")
+		battleRunner = new BattleRunner("templates/Royalebattle.template")
 	}
 
 	def "Check that the battle file is correctly constructed"() {
@@ -54,7 +55,7 @@ class TestRoboCodeBattle extends Specification {
 		when:
 		def score = battleRunner.runBattle(id)
 		println "Score for robot ${id} is: ${score}"
-		
+
 		then:
 		score >= 0
 	}

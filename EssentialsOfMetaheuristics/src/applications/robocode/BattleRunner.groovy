@@ -31,11 +31,14 @@ class BattleRunner {
 	def runBattle(id) {
 		linkJarFile(id)
 		File battleFile = new File("${robotDirectory}/evolve.battle")
+		println "id: ${id}"
+//		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath}"
 		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath} -nodisplay"
+		
 		def proc = command.execute(null, new File(robotDirectory))
 		proc.waitFor()
-		assert proc.exitValue() == 0
-		assert proc.err.text.equals("")
+		assert proc.exitValue() == 0		//**** should keep ******************//
+		assert proc.err.text.equals("")		//**** should keep ******************//
 		def lines = proc.in.text.split("\n")
 		def result = -1
 		lines.each { line ->

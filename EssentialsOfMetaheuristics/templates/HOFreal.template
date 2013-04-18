@@ -9,7 +9,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.Point2D;
 
 //  HawkOnFire - a robot by rozu
-//  With evolved evaluate() component by Nic McPhee
 
 /*
  * This template has the following fields that need to be filled in:
@@ -129,10 +128,8 @@ public class Individual_${id} extends AdvancedRobot
 			//		but this wasn't going to give me good results
 			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
 			if(en.live) {
-				eval += (${enemy_energy})*en.energy;
-				eval += (${my_energy})*myEnergy;
-				eval += (${angle_diff})*(calcAngle(myPos, p) - calcAngle(en.pos, p));
-				eval += (${distance})*p.distanceSq(en.pos);
+				eval += Math.min(en.energy/myEnergy,2) * 
+						(1 + Math.abs(Math.cos(calcAngle(myPos, p) - calcAngle(en.pos, p)))) / p.distanceSq(en.pos);
 			}
 		}
 		return eval;

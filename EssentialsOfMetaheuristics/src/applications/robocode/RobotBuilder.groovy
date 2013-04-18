@@ -12,23 +12,23 @@ class RobotBuilder {
 		template = engine.createTemplate(new File(templateFileName))
 	}
 	
-	def buildJarFile(values) throws Exception {
+	def buildJarFile(values) {
 		buildClassFile(values)
 		buildPropertiesFile(values)
 		def id = values['id']
 		def fileNamePrefix = "Individual_${id}"
 		def command = "jar -cf ${fileNamePrefix}.jar"
-		[".java", ".class", "\$MicroEnemy.class", ".properties"].each { suffix ->
+		[".java", ".class", "\$microEnemy.class", ".properties"].each { suffix ->
 			command += " ${robotPackage}/${fileNamePrefix}${suffix}"
 		}
 		def proc = command.execute(null, new File(robotDirectory))
 		proc.waitFor()
-        println(proc.in.text)
-		assert proc.err.text.equals("")
-		assert proc.exitValue() == 0
+        println(proc.in.text)			//**** should keep ******************//
+		assert proc.err.text.equals("")	//**** should keep ******************//
+		assert proc.exitValue() == 0  	//**** should keep ******************//
 	}
 	
-	def buildPropertiesFile(values) throws Exception {
+	def buildPropertiesFile(values) {
 		def id = values['id']
 		def filenamePrefix = "Individual_${id}"
 		def propertiesFileName = "${filenamePrefix}.properties"
@@ -36,32 +36,30 @@ class RobotBuilder {
 		propertiesFile << "robots: ${robotPackage}/${filenamePrefix}.class"
 	}
 	
-	def buildClassFile(values) throws Exception {
+	def buildClassFile(values) {
 		def javaFileName = buildJavaFile(values)
-//		def command = "javac -cp ../lib/robocode.jar ${robotPackage}/${javaFileName}"
+		
 		def command = "javac -cp ../lib/bsh-core-2.0b4.jar:../lib/robocode.jar ${robotPackage}/${javaFileName}"
+//		def command = "javac -cp ../lib/robocode.jar ${robotPackage}/${javaFileName}"
 		def proc = command.execute(null, new File(robotDirectory))
 		proc.waitFor()
-		assert proc.exitValue() == 0
-		assert proc.err.text.equals("")
-//        println "return code: ${proc.exitValue()}"
-//        println "stderr: ${proc.err.text}"
-//        println "stdout: ${proc.in.text}"
+		assert proc.exitValue() == 0 		//**** should keep ******************//
+		assert proc.err.text.equals("")		//**** should keep ******************//
 	}
 	
-	def buildJavaFile(values) throws Exception {
+	def buildJavaFile(values) {
 		def javaFileName = makeJavaFileName(values)
 		File javaFile = createFile(javaFileName)
 		writeFile(javaFile, values)
 		return javaFileName
 	}
 	
-	def makeJavaFileName(values) throws Exception {
+	def makeJavaFileName(values) {
 		def id = values['id']
 		def filename = "Individual_${id}.java"
 	}
 
-	private File createFile(javaFileName) throws Exception {
+	private File createFile(javaFileName) {
 		new File(robotDirectory).mkdir()
 		new File("${robotDirectory}/${robotPackage}").mkdir()
 		File javaFile = new File("${robotDirectory}/${robotPackage}/${javaFileName}")
@@ -70,7 +68,7 @@ class RobotBuilder {
 		return javaFile
 	}
 
-	private writeFile(javaFile, values) throws Exception {
+	private writeFile(javaFile, values) {
 		def result = template.make(values)
 		javaFile << result.toString()
 	}

@@ -1,5 +1,8 @@
 package evolved;
 
+import bsh.Interpreter;
+import java.util.Random;
+import java.text.DecimalFormat;
 import robocode.*;
 import robocode.util.Utils;
 import java.awt.Color;
@@ -28,11 +31,12 @@ public class Individual_${id} extends AdvancedRobot
 	static Point2D.Double lastPosition;
 	static Point2D.Double myPos;
 	static double myEnergy;
+	static Interpreter interpreter = new Interpreter();
 
 //- run -------------------------------------------------------------------------------------------------------------------------------------
 	public void run()
 	{
-		setColors(Color.black,Color.red,Color.orange);
+		setColors(Color.green,Color.black,Color.green);
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
 
@@ -117,8 +121,10 @@ public class Individual_${id} extends AdvancedRobot
 //- eval position ---------------------------------------------------------------------------------------------------------------------------
 	public static double evaluate(Point2D.Double p, double addLast) {
 		// this is basically here that the bot uses more space on the battlefield. In melee it is dangerous to stay somewhere too long.
-		double eval = addLast*0.08/p.distanceSq(lastPosition);
+		Double eval = addLast*0.08/p.distanceSq(lastPosition);
+		
 
+		
 		Enumeration<microEnemy> enemy_enum = enemies.elements();
 		while (enemy_enum.hasMoreElements()) {
 			microEnemy en = enemy_enum.nextElement();
@@ -129,10 +135,27 @@ public class Individual_${id} extends AdvancedRobot
 			//		but this wasn't going to give me good results
 			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
 			if(en.live) {
-				eval += (${enemy_energy})*en.energy;
-				eval += (${my_energy})*myEnergy;
-				eval += (${angle_diff})*(calcAngle(myPos, p) - calcAngle(en.pos, p));
-				eval += (${distance})*p.distanceSq(en.pos);
+				
+				String stringFunction = "${functionString}";
+				
+				String eE = new DecimalFormat("#").format(en.energy);
+				String mE = new DecimalFormat("#").format(myEnergy);
+				String mA = new DecimalFormat("#").format(calcAngle(myPos, p));
+				String eA = new DecimalFormat("#").format(calcAngle(en.pos, p));
+				String d = new DecimalFormat("#").format(p.distanceSq(en.pos));
+				
+				stringFunction = stringFunction.replaceAll("eE", eE);
+				stringFunction = stringFunction.replaceAll("mE", mE);
+				stringFunction = stringFunction.replaceAll("mA", mA);
+				stringFunction = stringFunction.replaceAll("eA", eA);
+				stringFunction = stringFunction.replaceAll("d", d);
+				Double output = 0.0;
+				
+				try{
+					output = (Double)interpreter.eval(stringFunction);
+				} catch(Exception e){
+				}
+				eval += output;
 			}
 		}
 		return eval;
