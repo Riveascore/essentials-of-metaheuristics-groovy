@@ -1,7 +1,7 @@
 #!/bin/sh
 
-rm ./*.jar
+rm ./Individual*.jar
 
-rm evolved/*
+rm evolved/Individual*
 
-rm ~/robocode/robots/*.jar
+rm ~/robocode/robots/Individual*.jar

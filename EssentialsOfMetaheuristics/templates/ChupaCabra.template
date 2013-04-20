@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  *   distance : the coefficient for the distance between the point and the enemy
  */
  
-public class Individual_${id} extends AdvancedRobot
+public class ${id} extends AdvancedRobot
 {
 	static Hashtable<String, microEnemy> enemies = new Hashtable<String, microEnemy>();
 	static microEnemy target;
@@ -123,8 +123,6 @@ public class Individual_${id} extends AdvancedRobot
 		// this is basically here that the bot uses more space on the battlefield. In melee it is dangerous to stay somewhere too long.
 		Double eval = addLast*0.08/p.distanceSq(lastPosition);
 		
-
-		
 		Enumeration<microEnemy> enemy_enum = enemies.elements();
 		while (enemy_enum.hasMoreElements()) {
 			microEnemy en = enemy_enum.nextElement();
@@ -135,26 +133,39 @@ public class Individual_${id} extends AdvancedRobot
 			//		but this wasn't going to give me good results
 			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
 			if(en.live) {
-				
 				String stringFunction = "${functionString}";
 				
+				/*
 				String eE = new DecimalFormat("#").format(en.energy);
 				String mE = new DecimalFormat("#").format(myEnergy);
 				String mA = new DecimalFormat("#").format(calcAngle(myPos, p));
 				String eA = new DecimalFormat("#").format(calcAngle(en.pos, p));
 				String d = new DecimalFormat("#").format(p.distanceSq(en.pos));
+				*/
+				
+				String eE = ((Double)en.energy).toString();
+				String mE = ((Double)myEnergy).toString();
+				String mA = ((Double)calcAngle(myPos, p)).toString();
+				String eA = ((Double)calcAngle(en.pos, p)).toString();
+				String d = ((Double)p.distanceSq(en.pos)).toString();
 				
 				stringFunction = stringFunction.replaceAll("eE", eE);
 				stringFunction = stringFunction.replaceAll("mE", mE);
 				stringFunction = stringFunction.replaceAll("mA", mA);
 				stringFunction = stringFunction.replaceAll("eA", eA);
 				stringFunction = stringFunction.replaceAll("d", d);
+				
+				//apparently subtracting a negative number poops itself in interpreter.eval
+				stringFunction = stringFunction.replaceAll("--", "+");
+				
 				Double output = 0.0;
 				
 				try{
 					output = (Double)interpreter.eval(stringFunction);
 				} catch(Exception e){
 				}
+				System.out.println(stringFunction);
+				System.out.println("output: " + output);
 				eval += output;
 			}
 		}

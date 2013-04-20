@@ -19,7 +19,7 @@ import java.awt.geom.Point2D;
  *   distance : the coefficient for the distance between the point and the enemy
  */
  
-public class Individual_${id} extends AdvancedRobot
+public class ${id} extends AdvancedRobot
 {
 	static Hashtable<String, microEnemy> enemies = new Hashtable<String, microEnemy>();
 	static microEnemy target;

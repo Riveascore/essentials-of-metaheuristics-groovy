@@ -24,7 +24,7 @@ class TestChupaCabra extends Specification {
 	
 	def setup() {
 		Random random = new Random()
-		id = random.nextInt(1000000)
+		id = "Individual_${random.nextInt(1000000)}"
 		
 		Tree tree = new Tree(10, 10)
 		functionString = tree.root.stringForm()
@@ -36,7 +36,7 @@ class TestChupaCabra extends Specification {
 		
 		robotBuilder = new RobotBuilder("templates/ChupaCabra.template")
 		robotBuilder.buildJarFile(values)
-
+		
 		battleRunner = new BattleRunner("templates/Royalebattle.template")
 	}
 
@@ -67,8 +67,7 @@ class TestChupaCabra extends Specification {
 			(line.indexOf("robocode.battle.selectedRobots") >= 0)
 		}
 		assert interestingLines.size() == 1
-		assert interestingLines[0].indexOf("sample.Walls") >= 0
-		assert interestingLines[0].indexOf("evolved.Individual_${id}") >= 0
+		assert interestingLines[0].indexOf("evolved.${id}") >= 0
 		return true
 	}
 }

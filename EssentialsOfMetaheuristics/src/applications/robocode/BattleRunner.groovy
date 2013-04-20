@@ -31,9 +31,8 @@ class BattleRunner {
 	def runBattle(id) {
 		linkJarFile(id)
 		File battleFile = new File("${robotDirectory}/evolve.battle")
-		println "id: ${id}"
-//		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath}"
-		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath} -nodisplay"
+		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath}"
+//		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath} -nodisplay"
 		
 		def proc = command.execute(null, new File(robotDirectory))
 		proc.waitFor()
@@ -42,7 +41,7 @@ class BattleRunner {
 		def lines = proc.in.text.split("\n")
 		def result = -1
 		lines.each { line ->
-			def pattern = ~/evolved\.Individual_${id}\s+(\d+)/
+			def pattern = ~/evolved\.${id}\s+(\d+)/
 			def m = (line =~ pattern)
 			if (m) {
 				result = Integer.parseInt(m[0][1])
@@ -57,7 +56,7 @@ class BattleRunner {
 	
 	def linkJarFile(id) {
 		def robotDir = new File("${userHome}/robocode/robots/")
-		def command = "ln -s ${robotDirectoryAbsolute}/Individual_${id}.jar ."
+		def command = "ln -s ${robotDirectoryAbsolute}/${id}.jar ."
 		def proc = command.execute(null, robotDir)
 		proc.waitFor()
 		assert proc.err.text.equals("")
