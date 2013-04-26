@@ -13,36 +13,45 @@ class EvolveChupa {
 	static def evolved_robots = "${userHome}/git/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
 	static def evolved = "${evolved_robots}/evolved"
 
-	static def bestMeleeScore
+	static def bestMeleeScore = 0.0
 	static def bestMeleeFunction
-	static def currentMeleeScore
-	static def currentMeleeFunction
 
-	//	def bestMeleeFuction
-	//	def bestMeleeScore
+	
+	static def bestOneVOneScore = 0.0
+	static def bestOneVOneFuction
+
 
 	static main(args) {
 		
+//		10.times {
+//			melee()
+//		}
+//		println "\n\nBest score: ${bestMeleeScore}"
+//		println "Most beast function: ${bestMeleeFunction}"
 		
-		1.times {
-			melee()
+		10.times {
+			oneVone()
 		}
+		println "\n\nBest score: ${bestOneVOneScore}"
+		println "Most beast function: ${bestOneVOneFuction}"
 	}
 	
-	public static def melee(){
+	public static void melee(){
 		def id = "Chupa"
 		def robotBuilder
 		def battleRunner
 		def functionString
 		def scores
 		def command
-		def bestOneVOneFuction
-		def bestOneVOneScore
-		
-		def totalScore
 
-		Tree tree = new Tree(6, 6)
+		def currentMeleeScore
+		def currentMeleeFunction
+		
+		def totalScore = 0
+
+		Tree tree = new Tree(7,7)
 		functionString = tree.root.stringForm()
+		//functionString = "((myEnergy-((calcAngle(myPos, p)-p.distanceSq(en.pos))+calcAngle(en.pos, p)))-((1.8228778812445507*0.626615400930616)*(p.distanceSq(en.pos)+1.2245042916399878)))"
 		currentMeleeFunction = functionString
 
 		//^not need these two
@@ -57,11 +66,27 @@ class EvolveChupa {
 
 		scores = battleRunner.runBattle(id)
 		
-		println "Robot ${id}'s eval function:"
-		println "${functionString}"
-		println "Score for ${id} is: ${scores[0]}"
-		println "Score for HawkOnFire is: ${scores[1]}\n"
-
+		/*
+		 * DOING BEST FUNCTION UPDATE
+		 */
+		scores.each{
+			totalScore += it
+		}
+		currentMeleeScore = scores[0]/totalScore
+		
+		println "Robot ${id}'s eval function: ${currentMeleeFunction}"
+		println "${id}'s fitness: ${currentMeleeScore}"
+		println "${id}'s scoreNumberReal: ${scores[0]}"
+		
+		if(currentMeleeScore > bestMeleeScore){
+			bestMeleeScore = currentMeleeScore
+			bestMeleeFunction = currentMeleeFunction
+		}
+		/*
+		 * DOING BEST FUNCTION UPDATE
+		 */
+		
+		
 		command = "rm ${evolved_robots}/${id}.jar"
 		command.execute()
 		//remove symbolic link to .jar
@@ -78,8 +103,6 @@ class EvolveChupa {
 		command.execute()
 		command = "rm ${evolved}/${id}.properties"
 		command.execute()
-		
-		return scores
 	}
 	
 	
@@ -92,15 +115,14 @@ class EvolveChupa {
 		def functionString
 		def scores
 		def command
-		def bestOneVOneFuction
-		def bestOneVOneScore
+		def currentOneVOneFunction
+		def currentOneVOneScore
+		def totalScore = 0
 
-		Tree tree = new Tree(6, 6)
+		Tree tree = new Tree(7, 7)
 		functionString = tree.root.stringForm()
+		currentOneVOneFunction = functionString
 
-//		functionString = "((calcAngle(en.pos, p)*en.energy)*(p.distanceSq(en.pos)*((calcAngle(myPos, p)*(myEnergy*p.distanceSq(en.pos)))+0.830591254201666)))"
-
-		println "Robot ${id}'s eval function: ${functionString}"
 		//^not need these two
 
 		def values = ["id" : id, "functionString" : functionString]
@@ -112,6 +134,18 @@ class EvolveChupa {
 		battleRunner.buildBattleFile(id)
 
 		scores = battleRunner.runBattle(id)
+		
+		totalScore = scores[0] + scores[1]
+		currentOneVOneScore = scores[0]/totalScore
+		
+		if(currentOneVOneScore > bestOneVOneScore){
+			bestOneVOneScore = currentOneVOneScore
+			bestOneVOneFuction = currentOneVOneFunction
+		}
+		
+		println "Robot ${id}'s eval function: ${functionString}"
+		println "${id}'s score: ${currentOneVOneScore}"
+		
 
 		command = "rm ${evolved_robots}/${id}.jar"
 		command.execute()
