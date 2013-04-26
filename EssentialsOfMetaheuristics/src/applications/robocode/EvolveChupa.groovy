@@ -23,17 +23,17 @@ class EvolveChupa {
 
 	static main(args) {
 		
-//		10.times {
-//			melee()
-//		}
-//		println "\n\nBest score: ${bestMeleeScore}"
-//		println "Most beast function: ${bestMeleeFunction}"
-		
-		10.times {
-			oneVone()
+		150.times {
+			melee()
 		}
-		println "\n\nBest score: ${bestOneVOneScore}"
-		println "Most beast function: ${bestOneVOneFuction}"
+		println "\n\nBest score: ${bestMeleeScore}"
+		println "Most beast function: ${bestMeleeFunction}"
+		
+//		2000.times {
+//			oneVone()
+//		}
+//		println "\n\nBest score: ${bestOneVOneScore}"
+//		println "Most beast function: ${bestOneVOneFuction}"
 	}
 	
 	public static void melee(){
@@ -51,7 +51,6 @@ class EvolveChupa {
 
 		Tree tree = new Tree(7,7)
 		functionString = tree.root.stringForm()
-		//functionString = "((myEnergy-((calcAngle(myPos, p)-p.distanceSq(en.pos))+calcAngle(en.pos, p)))-((1.8228778812445507*0.626615400930616)*(p.distanceSq(en.pos)+1.2245042916399878)))"
 		currentMeleeFunction = functionString
 
 		//^not need these two
@@ -74,9 +73,9 @@ class EvolveChupa {
 		}
 		currentMeleeScore = scores[0]/totalScore
 		
-		println "Robot ${id}'s eval function: ${currentMeleeFunction}"
-		println "${id}'s fitness: ${currentMeleeScore}"
-		println "${id}'s scoreNumberReal: ${scores[0]}"
+//		println "Robot ${id}'s eval function: ${currentMeleeFunction}"
+//		println "${id}'s fitness: ${currentMeleeScore}"
+//		println "${id}'s scoreNumberReal: ${scores[0]}"
 		
 		if(currentMeleeScore > bestMeleeScore){
 			bestMeleeScore = currentMeleeScore
@@ -143,8 +142,8 @@ class EvolveChupa {
 			bestOneVOneFuction = currentOneVOneFunction
 		}
 		
-		println "Robot ${id}'s eval function: ${functionString}"
-		println "${id}'s score: ${currentOneVOneScore}"
+//		println "Robot ${id}'s eval function: ${functionString}"
+//		println "${id}'s score: ${currentOneVOneScore}"
 		
 
 		command = "rm ${evolved_robots}/${id}.jar"
