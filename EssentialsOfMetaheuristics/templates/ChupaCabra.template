@@ -36,7 +36,7 @@ public class ${id} extends AdvancedRobot
 //- run -------------------------------------------------------------------------------------------------------------------------------------
 	public void run()
 	{
-		setColors(Color.green,Color.black,Color.green);
+		setColors(Color.red,Color.black,Color.red);
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForGunTurn(true);
 
@@ -123,49 +123,14 @@ public class ${id} extends AdvancedRobot
 		// this is basically here that the bot uses more space on the battlefield. In melee it is dangerous to stay somewhere too long.
 		Double eval = addLast*0.08/p.distanceSq(lastPosition);
 		
+		Double output = 0.0;
+		
 		Enumeration<microEnemy> enemy_enum = enemies.elements();
 		while (enemy_enum.hasMoreElements()) {
 			microEnemy en = enemy_enum.nextElement();
-			// this is the heart of HawkOnFire. So I try to explain what I wanted to do:
-			// -	Math.min(en.energy/myEnergy,2) is multiplied because en.energy/myEnergy is an indicator how dangerous an enemy is
-			// -	Math.abs(Math.cos(calcAngle(myPos, p) - calcAngle(en.pos, p))) is bigger if the moving direction isn't good in relation
-			//		to a certain bot. it would be more natural to use Math.abs(Math.cos(calcAngle(p, myPos) - calcAngle(en.pos, myPos)))
-			//		but this wasn't going to give me good results
-			// -	1 / p.distanceSq(en.pos) is just the normal anti gravity thing
+			
 			if(en.live) {
-				String stringFunction = "${functionString}";
-				
-				/*
-				String eE = new DecimalFormat("#").format(en.energy);
-				String mE = new DecimalFormat("#").format(myEnergy);
-				String mA = new DecimalFormat("#").format(calcAngle(myPos, p));
-				String eA = new DecimalFormat("#").format(calcAngle(en.pos, p));
-				String d = new DecimalFormat("#").format(p.distanceSq(en.pos));
-				*/
-				
-				String eE = ((Double)en.energy).toString();
-				String mE = ((Double)myEnergy).toString();
-				String mA = ((Double)calcAngle(myPos, p)).toString();
-				String eA = ((Double)calcAngle(en.pos, p)).toString();
-				String d = ((Double)p.distanceSq(en.pos)).toString();
-				
-				stringFunction = stringFunction.replaceAll("eE", eE);
-				stringFunction = stringFunction.replaceAll("mE", mE);
-				stringFunction = stringFunction.replaceAll("mA", mA);
-				stringFunction = stringFunction.replaceAll("eA", eA);
-				stringFunction = stringFunction.replaceAll("d", d);
-				
-				//apparently subtracting a negative number poops itself in interpreter.eval
-				stringFunction = stringFunction.replaceAll("--", "+");
-				
-				Double output = 0.0;
-				
-				try{
-					output = (Double)interpreter.eval(stringFunction);
-				} catch(Exception e){
-				}
-				System.out.println(stringFunction);
-				System.out.println("output: " + output);
+				output = ${functionString};
 				eval += output;
 			}
 		}

@@ -26,7 +26,8 @@ class TestChupaCabra extends Specification {
 		Random random = new Random()
 		id = "Individual_${random.nextInt(1000000)}"
 		
-		Tree tree = new Tree(10, 10)
+		//id = "Individual_${idNum+1}"
+		Tree tree = new Tree(6, 6)
 		functionString = tree.root.stringForm()
 		println "Robot ${id}'s eval function:"
 		println "${functionString}"
@@ -37,16 +38,9 @@ class TestChupaCabra extends Specification {
 		robotBuilder = new RobotBuilder("templates/ChupaCabra.template")
 		robotBuilder.buildJarFile(values)
 		
-		battleRunner = new BattleRunner("templates/Royalebattle.template")
+		battleRunner = new BattleRunner("templates/oneVone.template")
 	}
 
-	def "Check that the battle file is correctly constructed"() {
-		when:
-		battleRunner.buildBattleFile(id)
-
-		then:
-		confirmBattleFile()
-	}
 
 	def "Check that we can run a battle and extract the scores"() {
 		given:

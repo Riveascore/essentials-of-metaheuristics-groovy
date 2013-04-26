@@ -5,4 +5,4 @@ robocode.battle.numRounds=10
 robocode.battle.gunCoolingRate=0.1
 robocode.battle.rules.inactivityTime=450
 robocode.battle.hideEnemyNames=true
-robocode.battle.selectedRobots=evolved.Chupa,sample.Walls,sample.VelociRobot,evolved.Individual_709887,evolved.HawkOnFire,sample.RamFire,sample.PaintingRobot,sample.MyFirstJuniorRobot,sample.MyFirstRobot
+robocode.battle.selectedRobots=evolved.${id},sample.Walls,sample.VelociRobot,evolved.Individual_709887,evolved.HawkOnFire,sample.RamFire,sample.PaintingRobot,sample.MyFirstJuniorRobot,sample.MyFirstRobot
