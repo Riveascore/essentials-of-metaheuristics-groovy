@@ -23,17 +23,17 @@ class EvolveChupa {
 
 	static main(args) {
 		
-		150.times {
-			melee()
-		}
-		println "\n\nBest score: ${bestMeleeScore}"
-		println "Most beast function: ${bestMeleeFunction}"
-		
-//		2000.times {
-//			oneVone()
+//		150.times {
+//			melee()
 //		}
-//		println "\n\nBest score: ${bestOneVOneScore}"
-//		println "Most beast function: ${bestOneVOneFuction}"
+//		println "\n\nBest score: ${bestMeleeScore}"
+//		println "Most beast function: ${bestMeleeFunction}"
+		
+		2000.times {
+			oneVone()
+		}
+		println "\n\nBest score: ${bestOneVOneScore}"
+		println "Most beast function: ${bestOneVOneFuction}"
 	}
 	
 	public static void melee(){
