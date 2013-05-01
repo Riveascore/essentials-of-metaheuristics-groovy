@@ -5,60 +5,15 @@ import spock.lang.*
 
 class SinTest extends Specification{
 
-	Random random = new Random()
-	
-	@Ignore
-	def "Test Random"(){
-		given:
-		random.nextInt(-1)
-		
-		expect:
-		true
-	}
-	
-//	@Ignore
-	def "BigTest"(){
+    def "Test Random"(){
+        given:
+        def battleNodes = ["en.energy" : 1, "myEnergy" : 0, "calcAngle(en.pos, p)" : 2, "calcAngle(myPos, p)" : 0, "p.distanceSq(en.pos)" : 0]
+        List stuff= battleNodes.findAll { battleNode ->
+            battleNode.value == 0
+        }
+        when:
 
-		given:
-		Integer currentGenerationNumber = 0
-		Population currentPopulation = new Population('x', 3, 10, 20)
-		Population newPopulation
-		currentPopulation.createPopulation()
-
-		//setup initial population^
-
-		DataSet dataSet = new DataSet(100)
-		dataSet.createData()
-		
-		println "DataSet()" + dataSet.data
-		
-		currentPopulation.generateFitness(dataSet.data)
-		Tree mostFitIndividual = currentPopulation.getMostFitIndividual()
-
-//		while(mostFitIndividual.fitness >= 0.005){
-//			currentPopulation = currentPopulation.matingSeason()
-//			currentPopulation.generateFitness(dataSet.data)
-//			currentGenerationNumber++
-//
-//			mostFitIndividual = currentPopulation.getMostFitIndividual()
-//		}
-
-		println "Generation" + currentGenerationNumber + " Most fit individual:"
-		println "FUNCTION FORM: " + mostFitIndividual.root.stringForm()
-//		mostFitIndividual.printTree()
-
-		expect:
-		true
-	}
-	@Ignore
-	def "Test toStringFunction"(){
-		given:
-		Tree tree = new Tree('x', 30)
-		tree.createTree()
-		
-		println "Function IN SRING FORM: " + tree.root.stringForm()
-		
-		expect:
-		true
-	}
+        expect:
+        true
+    }
 }

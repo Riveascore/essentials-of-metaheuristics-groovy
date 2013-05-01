@@ -10,7 +10,7 @@ class EvolveChupa {
 	static Random random = new Random()
 
 	static def userHome = System.getProperty("user.home")
-	static def evolved_robots = "${userHome}/git/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
+	static def evolved_robots = "${userHome}/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
 	static def evolved = "${evolved_robots}/evolved"
 
 	static def bestMeleeScore = 0.0
@@ -29,7 +29,7 @@ class EvolveChupa {
 //		println "\n\nBest score: ${bestMeleeScore}"
 //		println "Most beast function: ${bestMeleeFunction}"
 		
-		2000.times {
+		1000.times {
 			oneVone()
 		}
 		println "\n\nBest score: ${bestOneVOneScore}"
@@ -142,8 +142,8 @@ class EvolveChupa {
 			bestOneVOneFuction = currentOneVOneFunction
 		}
 		
-//		println "Robot ${id}'s eval function: ${functionString}"
-//		println "${id}'s score: ${currentOneVOneScore}"
+		println "Robot ${id}'s eval function: ${functionString}"
+		println "${id}'s score: ${currentOneVOneScore}"
 		
 
 		command = "rm ${evolved_robots}/${id}.jar"
