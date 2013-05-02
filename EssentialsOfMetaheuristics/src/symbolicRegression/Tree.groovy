@@ -5,7 +5,7 @@ import java.util.regex.Pattern.First;
 
 import applications.robocode.BattleRunner;
 
-class Tree {
+class Tree implements Cloneable{
     def depthLimit, terminalValue
     Node root
     Double fitness
@@ -16,7 +16,7 @@ class Tree {
     def operatorNodeCounter
     def leafNodeCounter
     //	List battleNodesToUseUp = ["en.energy", "myEnergy", "calcAngle(en.pos, p)", "calcAngle(myPos, p)", "p.distanceSq(en.pos)"]
-    Map battleNodes
+    def battleNodes
 
     Random random = new Random()
     def allNodesList = [
@@ -41,9 +41,9 @@ class Tree {
         leafNodeCounter = 0
 		battleNodes = ["en.energy" : 0, "myEnergy" : 0, "calcAngle(en.pos, p)" : 0, "calcAngle(myPos, p)" : 0, "p.distanceSq(en.pos)" : 0]
         this.createTree()
-        //		findNodes(root)
+        findNodes(root)
     }
-
+	
     public Tree(Integer depthLimit, Integer maxHeightLimit, Map battleNodeMap){
         this.depthLimit = depthLimit
         this.maxHeightLimit = maxHeightLimit
@@ -52,7 +52,7 @@ class Tree {
         battleNodeCounter = 0
 		battleNodes = battleNodeMap
         this.createTree()
-        //              findNodes(root)
+        findNodes(root)
     }
 
     public createTree(){
@@ -202,11 +202,6 @@ class Tree {
         }
 
         TreePrinter.printNode(treeClone.root)
-    }
-
-    public cloneTree(){
-        Tree clonedTree = new Tree(this.terminalValue, this.root.cloneNode(), this.maxHeightLimit)
-        clonedTree
     }
 
     public pickRandomNode(Integer insertedTreeHeight){

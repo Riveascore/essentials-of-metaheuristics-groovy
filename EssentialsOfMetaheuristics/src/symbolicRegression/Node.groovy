@@ -9,6 +9,13 @@ class Node {
     //TODO ^not sure if should be def?
 
     List nonTerminals = ["+", "-", "*"]
+	def battleNodeList = [
+		"en.energy",
+		"myEnergy",
+		"calcAngle(en.pos, p)",
+		"calcAngle(myPos, p)",
+		"p.distanceSq(en.pos)",
+	]
 
     public Node(value){
         this.value = value
@@ -26,6 +33,10 @@ class Node {
             this.value
         }
     }
+	
+	public isBattleNode(){
+		battleNodeList.contains(this.value)
+	}
 
     public cloneNode(){
         Node node = new Node(this.value)

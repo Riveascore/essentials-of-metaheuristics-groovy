@@ -1,5 +1,7 @@
 package symbolicRegression
 
+import com.sun.org.apache.xalan.internal.xsltc.dom.ClonedNodeListIterator;
+
 class GeneticOperators {
 	Random random = new Random()
 	
@@ -58,17 +60,47 @@ class GeneticOperators {
 	}
 	
 	public mutate(Tree originalTree){
+		
 		Integer additionHeightLimit = originalTree.maxHeightLimit - originalTree.root.getNodeHeight()
 		
-		Tree clonedTree = originalTree.cloneTree()
+		Tree clonedTree = originalTree.clone()
+//		clonedTree.battleNodes = ["en.energy" : 0, "myEnergy" : 0, "calcAngle(en.pos, p)" : 0, "calcAngle(myPos, p)" : 0, "p.distanceSq(en.pos)" : 0]
 		
 		Integer injectionTreeHeight = random.nextInt(clonedTree.maxHeightLimit)+1
-		Tree injectionTree = new Tree(clonedTree.terminalValue, injectionTreeHeight, clonedTree.maxHeightLimit)
+		println injectionTreeHeight
 		
-		Node replaceThisNode = clonedTree.pickRandomNode(injectionTree.root.getNodeHeight())
-		Node injectionNode = injectionTree.root
 		
-		clonedTree.replaceNode(replaceThisNode, injectionNode)
-		clonedTree
+		Node replaceThisNode = clonedTree.pickRandomNode(injectionTreeHeight)
+		//loop through children of replaceThisNode and count up battle nodes, subtract that from orginal tree's battleNodes
+		
+		def battleNodes = clonedTree.battleNodes.clone()
+		def operatorNodeCounter = clonedTree.operatorNodeCounter
+		def leafNodeCounter = clonedTree.leafNodeCounter
+		
+		{node ->
+			if(node.isTerminal()){
+				if(node.isBattleNode()){
+					def key = node.value
+					battleNodes[key] -= 1
+				}
+				leafNodeCounter -= 1
+			}
+			else{
+				clonedTree.operatorNodeCounter -= 1
+				call(node.left)
+				call(node.right)
+			}
+		}(replaceThisNode)
+		
+		
+		
+		clonedTree.battleNodes = battleNodes
+		println "clonedTree battleNodes after: ${clonedTree.battleNodes}"
+		Tree injectionTree = new Tree(injectionTreeHeight, clonedTree.maxHeightLimit, )
+//		
+//		Node injectionNode = injectionTree.root
+//		
+//		clonedTree.replaceNode(replaceThisNode, injectionNode)
+//		clonedTree
 	}
 }
