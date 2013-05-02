@@ -14,7 +14,7 @@ class Tree {
     def maxHeightLimit
     List<Node> allNodes = new ArrayList<Node>()
     def operatorNodeCounter
-    def battleNodeCounter
+    def leafNodeCounter
     //	List battleNodesToUseUp = ["en.energy", "myEnergy", "calcAngle(en.pos, p)", "calcAngle(myPos, p)", "p.distanceSq(en.pos)"]
     Map battleNodes
 
@@ -36,11 +36,11 @@ class Tree {
     public Tree(Integer depthLimit, Integer maxHeightLimit){
         this.depthLimit = depthLimit
         this.maxHeightLimit = maxHeightLimit
-        Collections.shuffle(battleNodesToUseUp)
+//        Collections.shuffle(battleNodesToUseUp)
         operatorNodeCounter = 0
-        battleNodeCounter = 0
+        leafNodeCounter = 0
+		battleNodes = ["en.energy" : 0, "myEnergy" : 0, "calcAngle(en.pos, p)" : 0, "calcAngle(myPos, p)" : 0, "p.distanceSq(en.pos)" : 0]
         this.createTree()
-        battleNodes = ["en.energy" : 0, "myEnergy" : 0, "calcAngle(en.pos, p)" : 0, "calcAngle(myPos, p)" : 0, "p.distanceSq(en.pos)" : 0]
         //		findNodes(root)
     }
 
@@ -50,8 +50,8 @@ class Tree {
         Collections.shuffle(battleNodesToUseUp)
         operatorNodeCounter = 0
         battleNodeCounter = 0
+		battleNodes = battleNodeMap
         this.createTree()
-        battleNodes = battleNodeMap
         //              findNodes(root)
     }
 
@@ -62,7 +62,7 @@ class Tree {
     //ephemeral random constant
     public ERC(){
         //Choose from -5 to 5
-        Double randomConstant = random.nextDouble()*2.0
+        Double randomConstant = random.nextDouble()*2.0*Math.PI
     }
 
     public boolean needBattleNode(){
@@ -77,19 +77,29 @@ class Tree {
     //Gets next battle node with value=0 and increments value +1
     public def getNextBattleNode(){
         List neededNodes = []
+		def returnedNode
         
         battleNodes.each {
             if(it.value == 0){
                 neededNodes.add(it.key)
             }
         }
-        
-        def rand = random.nextInt()*neededNodes.size()
-        def nodeKey = neededNodes.get(rand)
-        
+
+        Collections.shuffle(neededNodes)
+		returnedNode = neededNodes.get(0)
+		battleNodes.put(returnedNode, 1+battleNodes.get(returnedNode))
+		leafNodeCounter++
+		returnedNode
     }
+	
+	public def numberOfBattleNodes(){
+		def count = 0
+        battleNodes.each {
+            count += it.value
+        }
+	}
 
-
+	//battleNodes.put(nodeVal, battleNodes.get(nodeVal) + 1)
     public grow(depth, maxDepth){
         Node node
         def nodeVal
@@ -101,7 +111,6 @@ class Tree {
             if(needBattleNode()){
                 nodeVal= getNextBattleNode()
                 node = new Node(nodeVal)
-                battleNodeCounter++
             }else{
                 rand = random.nextInt(6)
                 nodeVal = allNodesList[rand]
@@ -109,14 +118,16 @@ class Tree {
                     node = new Node(nodeVal())
                     //if battle const
                 }else{
+					battleNodes.put(nodeVal, battleNodes.get(nodeVal) + 1)
                     node = new Node(nodeVal)
                 }
+				leafNodeCounter++
             }
         }else{
             //if all constants not used
-            if(battleNodeCounter < 5){
+            if(needBattleNode()){
                 //use operator
-                if((battleNodeCounter-operatorNodeCounter) == 0){
+                if((leafNodeCounter-operatorNodeCounter) == 0){
                     rand = random.nextInt(3)+6
                     nodeVal = allNodesList[rand]
                     operatorNodeCounter++
@@ -132,12 +143,12 @@ class Tree {
                     if(rand<6){
                         if(rand==0){
                             nodeVal = allNodesList[0]
+							leafNodeCounter++
                             node = new Node(nodeVal())
-                            battleNodeCounter++
                         }else{
-                            nodeVal = battleNodesToUseUp.remove(0)
+							nodeVal = getNextBattleNode()
+//                            nodeVal = battleNodesToUseUp.remove(0)
                             node = new Node(nodeVal)
-                            battleNodeCounter++
                         }
                         //if operator
                     }else{
@@ -158,15 +169,19 @@ class Tree {
                     nodeVal = allNodesList[rand]
                     node = new Node(nodeVal)
                     //depth = depth + 1
+					operatorNodeCounter++
                     node.setLeft(grow(depth + 1, maxDepth))
                     node.setRight(grow(depth + 1, maxDepth))
                     //if rand const
                 }else if(rand==0){
                     nodeVal = allNodesList[0]
+					leafNodeCounter++
                     node = new Node(nodeVal())
                     //if battle const
                 }else{
                     nodeVal = allNodesList[rand]
+					battleNodes.put(nodeVal, battleNodes.get(nodeVal)+1)
+					leafNodeCounter++
                     node = new Node(nodeVal)
                 }
             }
@@ -176,7 +191,6 @@ class Tree {
 
     public printTree(){
         Tree treeClone = this.cloneTree()
-
 
         treeClone.allNodes.each {
             if(it.value instanceof Double){

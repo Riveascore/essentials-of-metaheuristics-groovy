@@ -10,7 +10,7 @@ class EvolveChupa {
 	static Random random = new Random()
 
 	static def userHome = System.getProperty("user.home")
-	static def evolved_robots = "${userHome}/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
+	static def evolved_robots = "${userHome}/git/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
 	static def evolved = "${evolved_robots}/evolved"
 
 	static def bestMeleeScore = 0.0
