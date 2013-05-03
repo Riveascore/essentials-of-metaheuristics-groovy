@@ -12,21 +12,23 @@ class MutationEvolve {
     static Random randomObject = new Random()
 
     static def userHome = System.getProperty("user.home")
-    static def evolved_robots = "${userHome}/git/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
+    static def evolved_robots = "${userHome}/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
     static def evolved = "${evolved_robots}/evolved"
 
-    static def enemies = [
+    static def enemies1 = [
         "aw.Gilgalad",
         "gh.GresSuffurd",
         "evolved.Individual_526319",
-        "evolved.HawkOnFire",
-        "jk.mini.Cunobelin",
+        "jk.mini.Cunobelin"
+    ]
+    
+    static def enemies2 = [
         "jk.precise.Wintermute",
         "kc.serpent.WaveSerpent",
         "xander.cat.XanderCat",
         "mue.Ascendant"
     ]
-    static def populationSize = 100 //256
+    static def populationSize = 50 //256
     static def numberOfRounds = 4
     static def numberOfGenerations = 10
 
@@ -138,7 +140,7 @@ class MutationEvolve {
         def functionString
         def robotBuilderValuesToInsert
         def id = "ChupaCabra"
-        def numberOfThreads = enemies.size()
+        def numberOfThreads = 4  //enemies.size()
         def timeStart
         def timeStop
         TimeDuration duration
@@ -146,17 +148,20 @@ class MutationEvolve {
         population.each {citizen ->
             def robotBuilder
             def command
-            def pool = Executors.newFixedThreadPool(numberOfThreads)
-            def completionService = new ExecutorCompletionService<>(pool)
-
+            def pool
+            def completionService
+            
             functionString = citizen[0].root.stringForm()
             robotBuilderValuesToInsert = ["id" : id, "functionString" : functionString]
 
             robotBuilder = new RobotBuilder("templates/MutationChupaCabra.template")
             robotBuilder.buildJarFile(robotBuilderValuesToInsert)
 
-//            timeStart = new Date()
-            enemies.each {enemy ->
+            timeStart = new Date()
+            pool = Executors.newFixedThreadPool(numberOfThreads)
+            completionService = new ExecutorCompletionService<>(pool)
+            
+            enemies1.each {enemy ->
                 def battleRunner
                 def enemyID = enemy
                 def fitness
@@ -169,7 +174,28 @@ class MutationEvolve {
                     battleRunner.runBattle(id, enemy)
                 });
             }
+            numberOfThreads.times {
+                final Future<Double> future = completionService.take();
+                final Double content = future.get();
+                citizen[1] += content
+            }
+            pool.shutdown()
+            
+            pool = Executors.newFixedThreadPool(numberOfThreads)
+            completionService = new ExecutorCompletionService<>(pool)
+            enemies2.each {enemy ->
+                def battleRunner
+                def enemyID = enemy
+                def fitness
 
+                //Threads
+                completionService.submit({
+                    battleRunner = new MutationBattleRunner("templates/MutationBattle.template")
+                    battleRunner.buildBattleFile(enemy)
+
+                    battleRunner.runBattle(id, enemy)
+                });
+            }
             numberOfThreads.times {
                 final Future<Double> future = completionService.take();
                 final Double content = future.get();
@@ -177,11 +203,11 @@ class MutationEvolve {
             }
             pool.shutdown()
 
-//            timeStop = new Date()
-//            duration = TimeCategory.minus(timeStop, timeStart)
-//            println duration
+            timeStop = new Date()
+            duration = TimeCategory.minus(timeStop, timeStart)
+            println duration
 
-            citizen[1] /= enemies.size()
+            citizen[1] /= 8
 
             command = "rm ${evolved_robots}/${id}.jar"
             command.execute()
@@ -227,10 +253,6 @@ class MutationEvolve {
         def functionString
         def robotBuilderValuesToInsert
         def id = "ChupaCabra"
-//        def numberOfThreads = enemies.size()
-//        def timeStart
-//        def timeStop
-//        TimeDuration duration
 
         population.each {citizen ->
             def robotBuilder
