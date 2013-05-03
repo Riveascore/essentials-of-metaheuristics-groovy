@@ -64,16 +64,14 @@ class GeneticOperators {
 		Integer additionHeightLimit = originalTree.maxHeightLimit - originalTree.root.getNodeHeight()
 		
 		Tree clonedTree = originalTree.cloneTree()
-//		clonedTree.battleNodes = ["en.energy" : 0, "myEnergy" : 0, "calcAngle(en.pos, p)" : 0, "calcAngle(myPos, p)" : 0, "p.distanceSq(en.pos)" : 0]
 		
 		Integer injectionTreeHeight = random.nextInt(clonedTree.maxHeightLimit)+1
 		println injectionTreeHeight
 		
 		
 		Node replaceThisNode = clonedTree.pickRandomNode(injectionTreeHeight)
-		//loop through children of replaceThisNode and count up battle nodes, subtract that from orginal tree's battleNodes
 		
-		{node ->
+		def cloj = {node ->
 			if(node.isTerminal()){
 				if(node.isBattleNode()){
 					def key = node.value
@@ -86,8 +84,8 @@ class GeneticOperators {
 				call(node.left)
 				call(node.right)
 			}
-		}(replaceThisNode)
-		
+		}
+		cloj(replaceThisNode)
 //		Node injectionNode = injectionTree.root
 //		
 //		clonedTree.replaceNode(replaceThisNode, injectionNode)
