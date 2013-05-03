@@ -97,10 +97,16 @@ class MutationEvolve {
 		def functionString
 		def robotBuilderValuesToInsert
 		def id = "ChupaCabra"
+		def numberOfThreads = enemies.size()
+		def timeStart
+		def timeStop
+		TimeDuration duration
 
 		population.each {citizen ->
 			def robotBuilder
 			def command
+//			def pool = Executors.newFixedThreadPool(numberOfThreads)
+//			def completionService = new ExecutorCompletionService<>(pool)
 
 			functionString = citizen[0].root.stringForm()
 			robotBuilderValuesToInsert = ["id" : id, "functionString" : functionString]
@@ -108,70 +114,39 @@ class MutationEvolve {
 			robotBuilder = new RobotBuilder("templates/MutationChupaCabra.template")
 			robotBuilder.buildJarFile(robotBuilderValuesToInsert)
 
-
-			// Some code you want to time
-
-
-
-
-			//			final ExecutorService pool = Executors.newFixedThreadPool(10)
-			//			List<Future<Double>> contentsFutures = new ArrayList<>(10)
-
-
-
-
-
-
-			//			def THREADS = 10
-			//			def pool = Executors.newFixedThreadPool(THREADS)
-			//			def defer = { c -> pool.submit(c as Callable) }
-			//			def fib = { n ->
-			//			  def left = defer{ fib(n-1) }
-			//			  def right = defer{ fib(n-2) }
-			//			  left.get() + right.get()
-			//			}
-
-
-
-			def numberOfThreads = enemies.size()
-			final ExecutorService pool = Executors.newFixedThreadPool(numberOfThreads);
-			final ExecutorCompletionService<String> completionService = new ExecutorCompletionService<>(pool);
-
-			def timeStart = new Date()
+			timeStart = new Date()
 			enemies.each {enemy ->
 				def battleRunner
 				def enemyID = enemy
 				def fitness
 
-				completionService.submit({
-					battleRunner = new MutationBattleRunner("templates/MutationBattle.template")
-					battleRunner.buildBattleFile(enemyID)
+				// No threads
+				battleRunner = new MutationBattleRunner("templates/MutationBattle.template")
+				battleRunner.buildBattleFile(enemyID)
 
-					battleRunner.runBattle(id, enemyID)
-				});
-
-				//								battleRunner = new MutationBattleRunner("templates/MutationBattle.template")
-				//								battleRunner.buildBattleFile(enemyID)
-				//
-				//								fitness = battleRunner.runBattle(id, enemyID)
-				//
-				//				citizen[1] += fitness
-
+				fitness = battleRunner.runBattle(id, enemyID)
+				citizen[1] += fitness
+				
+				//Threads
+//				completionService.submit({
+//					battleRunner = new MutationBattleRunner("templates/MutationBattle.template")
+//					battleRunner.buildBattleFile(enemyID)
+//
+//					battleRunner.runBattle(id, enemyID)
+//				});
 			}
 
-			numberOfThreads.times {
-				final Future<Double> future = completionService.take();
-				//				try {
-				final Double content = future.get();
-				println content
-				//				} catch (ExecutionException e) {
-				//				}
-			}
+//			numberOfThreads.times {
+//				final Future<Double> future = completionService.take();
+//				final Double content = future.get();
+//				citizen[1] += content
+//			}
+//			pool.shutdown()
 
-			def timeStop = new Date()
-			TimeDuration duration = TimeCategory.minus(timeStop, timeStart)
+			timeStop = new Date()
+			duration = TimeCategory.minus(timeStop, timeStart)
 			println duration
-			println "fought all enemies, time for next bot"
+			
 			citizen[1] /= enemies.size()
 
 			command = "rm ${evolved_robots}/${id}.jar"
