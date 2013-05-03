@@ -1,8 +1,8 @@
 #Battle Properties
 robocode.battleField.width=600
 robocode.battleField.height=600
-robocode.battle.numRounds=10
+robocode.battle.numRounds=4
 robocode.battle.gunCoolingRate=0.1
 robocode.battle.rules.inactivityTime=450
 robocode.battle.hideEnemyNames=true
-robocode.battle.selectedRobots=evolved.Chupa,evolved.HawkOnFire
+robocode.battle.selectedRobots=evolved.ChupaCabra, mue.Ascendant

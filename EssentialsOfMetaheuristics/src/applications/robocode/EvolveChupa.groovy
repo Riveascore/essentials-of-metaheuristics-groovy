@@ -12,7 +12,7 @@ class EvolveChupa {
 	static def userHome = System.getProperty("user.home")
 	static def evolved_robots = "${userHome}/git/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
 	static def evolved = "${evolved_robots}/evolved"
-
+	
 	static def bestMeleeScore = 0.0
 	static def bestMeleeFunction
 
@@ -29,7 +29,7 @@ class EvolveChupa {
 //		println "\n\nBest score: ${bestMeleeScore}"
 //		println "Most beast function: ${bestMeleeFunction}"
 		
-		1000.times {
+		1.times {
 			oneVone()
 		}
 		println "\n\nBest score: ${bestOneVOneScore}"
@@ -62,7 +62,7 @@ class EvolveChupa {
 		battleRunner = new MeleeBattleRunner("templates/melee.template")
 
 		battleRunner.buildBattleFile(id)
-
+		
 		scores = battleRunner.runBattle(id)
 		
 		/*
@@ -128,7 +128,7 @@ class EvolveChupa {
 
 		robotBuilder = new RobotBuilder("templates/ChupaCabra.template")
 		robotBuilder.buildJarFile(values)
-		battleRunner = new OurBattleRunner("templates/oneVone.template")
+		battleRunner = new OneVOneBattleRunner("templates/oneVone.template")
 
 		battleRunner.buildBattleFile(id)
 

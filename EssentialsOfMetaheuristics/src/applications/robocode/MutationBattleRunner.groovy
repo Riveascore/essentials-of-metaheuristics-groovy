@@ -9,13 +9,13 @@ import groovy.text.SimpleTemplateEngine
  * and that it has been configured (via the GUI) to be able to load robot
  * files from the evolved_robots directory in this project.
  */
-class OurBattleRunner {
+class MutationBattleRunner {
 	def userHome = System.getProperty("user.home")
 	def robotDirectory = "evolved_robots"
 	def robotDirectoryAbsolute = new File(robotDirectory).absolutePath
 	def template
 
-	def OurBattleRunner(String templateFileName) {
+	def MutationBattleRunner(String templateFileName) {
 		def engine = new SimpleTemplateEngine()
 		template = engine.createTemplate(new File(templateFileName))
 	}
@@ -24,11 +24,11 @@ class OurBattleRunner {
 		File battleFile = new File("${robotDirectory}/evolve.battle")
 		battleFile.delete()
 		battleFile.createNewFile()
-		def result = template.make(["id" : id])
+		def result = template.make(["enemyID" : id])
 		battleFile << result.toString()
 	}
 
-	def runBattle(id) {
+	def runBattle(id, enemyID) {
 		linkJarFile(id)
 		File battleFile = new File("${robotDirectory}/evolve.battle")
 //		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath}"
@@ -43,36 +43,21 @@ class OurBattleRunner {
 		
 		def resultUs = -1
 		lines.each { line ->
-			def pattern = ~/evolved\.${id}\s+(\d+)/
+			def pattern = ~/evolved\.ChupaCabra\s+\d+\s+\((\d+)%\)/
 			def m = (line =~ pattern)
 			if (m) {
-				resultUs = Integer.parseInt(m[0][1])
+				resultUs = (Double)Integer.parseInt(m[0][1])/100.0
 			}
 		}
-		
-		def resultHawk = -1
-		lines.each { line ->
-			def pattern = ~/evolved\.HawkOnFire\s+(\d+)/
-			def m = (line =~ pattern)
-			if (m) {
-				resultHawk = Integer.parseInt(m[0][1])
-			}
-		}
-		return [resultUs, resultHawk]
-		
-//		if (result >= 0) {
-//			return result
-//		} else {
-//			throw new RuntimeException("Didn't find score for evolved robot")
-//		}
+		resultUs
 	}
 	
 	def linkJarFile(id) {
 		def robotDir = new File("${userHome}/robocode/robots/")
 		def command = "ln -s ${robotDirectoryAbsolute}/${id}.jar ."
 		def proc = command.execute(null, robotDir)
-		proc.waitFor()
-		assert proc.err.text.equals("")
-		assert proc.exitValue() == 0
+//		proc.waitFor()
+//		assert proc.err.text.equals("")
+//		assert proc.exitValue() == 0
 	}
 }
