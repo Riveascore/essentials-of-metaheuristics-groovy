@@ -21,7 +21,7 @@ class MutationBattleRunner {
 	}
 
 	def buildBattleFile(id) {
-		File battleFile = new File("${robotDirectory}/evolve.battle")
+		File battleFile = new File("${robotDirectory}/${id}.battle")
 		battleFile.delete()
 		battleFile.createNewFile()
 		def result = template.make(["enemyID" : id])
@@ -30,7 +30,7 @@ class MutationBattleRunner {
 
 	def runBattle(id, enemyID) {
 		linkJarFile(id)
-		File battleFile = new File("${robotDirectory}/evolve.battle")
+		File battleFile = new File("${robotDirectory}/${enemyID}.battle")
 //		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath}"
 		def command = "${userHome}/robocode/robocode.sh -battle ${battleFile.absolutePath} -nodisplay"
 		

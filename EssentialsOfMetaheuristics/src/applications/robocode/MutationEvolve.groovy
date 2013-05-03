@@ -12,7 +12,7 @@ class MutationEvolve {
     static Random randomObject = new Random()
 
     static def userHome = System.getProperty("user.home")
-    static def evolved_robots = "${userHome}/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
+    static def evolved_robots = "${userHome}/git/essentials-of-metaheuristics-groovy/EssentialsOfMetaheuristics/evolved_robots"
     static def evolved = "${evolved_robots}/evolved"
 
     static def enemies = [
@@ -164,9 +164,9 @@ class MutationEvolve {
                 //Threads
                 completionService.submit({
                     battleRunner = new MutationBattleRunner("templates/MutationBattle.template")
-                    battleRunner.buildBattleFile(enemyID)
+                    battleRunner.buildBattleFile(enemy)
 
-                    battleRunner.runBattle(id, enemyID)
+                    battleRunner.runBattle(id, enemy)
                 });
             }
 
