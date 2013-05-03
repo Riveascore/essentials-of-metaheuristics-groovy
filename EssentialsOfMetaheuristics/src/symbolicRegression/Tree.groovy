@@ -37,7 +37,6 @@ class Tree implements Cloneable{
     public Tree(Integer depthLimit, Integer maxHeightLimit){
         this.depthLimit = depthLimit
         this.maxHeightLimit = maxHeightLimit
-//        Collections.shuffle(battleNodesToUseUp)
         operatorNodeCounter = 0
         leafNodeCounter = 0
 		battleNodes = ["en.energy" : 0, "myEnergy" : 0, "calcAngle(en.pos, p)" : 0, "calcAngle(myPos, p)" : 0, "p.distanceSq(en.pos)" : 0]
@@ -45,13 +44,12 @@ class Tree implements Cloneable{
         findNodes(root)
     }
 	
-    public Tree(Integer depthLimit, Integer maxHeightLimit, Map battleNodeMap){
+    public Tree(Integer depthLimit, Integer maxHeightLimit, def battleNodeMap){
         this.depthLimit = depthLimit
         this.maxHeightLimit = maxHeightLimit
-        Collections.shuffle(battleNodesToUseUp)
-        operatorNodeCounter = 0
-        battleNodeCounter = 0
-		battleNodes = battleNodeMap
+        this.operatorNodeCounter = 0
+        this.leafNodeCounter = 0
+		this.battleNodes = battleNodeMap
         this.createTree()
         findNodes(root)
     }

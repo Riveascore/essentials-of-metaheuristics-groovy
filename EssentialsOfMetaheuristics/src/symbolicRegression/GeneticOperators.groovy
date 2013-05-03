@@ -66,8 +66,6 @@ class GeneticOperators {
 		Tree clonedTree = originalTree.cloneTree()
 		
 		Integer injectionTreeHeight = random.nextInt(clonedTree.maxHeightLimit)+1
-		println injectionTreeHeight
-		
 		
 		Node replaceThisNode = clonedTree.pickRandomNode(injectionTreeHeight)
 		
@@ -86,9 +84,16 @@ class GeneticOperators {
 			}
 		}
 		cloj(replaceThisNode)
-//		Node injectionNode = injectionTree.root
-//		
-//		clonedTree.replaceNode(replaceThisNode, injectionNode)
-//		clonedTree
+		
+		Tree injectionTree = new Tree(injectionTreeHeight, injectionTreeHeight, clonedTree.battleNodes)
+		
+		clonedTree.battleNodes = injectionTree.battleNodes
+		clonedTree.operatorNodeCounter += injectionTree.operatorNodeCounter
+		clonedTree.leafNodeCounter += injectionTree.leafNodeCounter
+				
+		Node injectionNode = injectionTree.root
+		
+		clonedTree.replaceNode(replaceThisNode, injectionNode)
+		clonedTree
 	}
 }
