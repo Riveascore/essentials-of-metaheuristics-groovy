@@ -13,16 +13,15 @@ class SinTest extends Specification{
 		println tree.root.stringForm()
 		println "battleNodes: ${tree.battleNodes}"
 		
-		Tree clonedTree = tree.clone()
+		Tree clonedTree = tree.cloneTree()
 //		
 		println "original tree battleNodes before mutation: ${tree.battleNodes}"
-//		println "cloned tree battleNodes: ${clonedTree.battleNodes}"
 		
 		GeneticOperators geneticOperators = new GeneticOperators()
 		geneticOperators.mutate(tree)
 		
 		println "original tree battleNodes after mutation: ${tree.battleNodes}"
-		
+		println "cloned tree battleNodes after mutation: ${clonedTree.battleNodes}"
 		
         expect:
 		!tree.needBattleNode()

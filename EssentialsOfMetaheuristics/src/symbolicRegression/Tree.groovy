@@ -31,7 +31,8 @@ class Tree implements Cloneable{
         "*"
     ]
 
-
+	public Tree(){
+	}
 
     public Tree(Integer depthLimit, Integer maxHeightLimit){
         this.depthLimit = depthLimit
@@ -58,6 +59,19 @@ class Tree implements Cloneable{
     public createTree(){
         this.root = grow(1, this.depthLimit)
     }
+	
+	public cloneTree(){
+		Tree clonedTree = new Tree()
+		
+		clonedTree.depthLimit = this.depthLimit
+		clonedTree.root = this.root.cloneNode()
+		clonedTree.maxHeightLimit = this.maxHeightLimit
+		clonedTree.operatorNodeCounter = this.operatorNodeCounter
+		clonedTree.leafNodeCounter = this.leafNodeCounter
+		clonedTree.battleNodes = this.battleNodes.clone()
+		clonedTree.findNodes(clonedTree.root)
+		clonedTree
+	}
 
     //ephemeral random constant
     public ERC(){
