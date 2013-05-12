@@ -322,4 +322,8 @@ class Tree implements Cloneable{
     public evaluateTree(def input){
         this.root.computeNodeValue(input)
     }
+    
+    public stringForm(){
+        this.root.stringForm()
+    }
 }
